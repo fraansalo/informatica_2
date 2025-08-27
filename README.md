@@ -1,5 +1,2 @@
-# tp1_InfoII
-Repositorio de entrega trabajo práctico numero 1
-Consigna: 
-
-Hacer el refactor del código de "Resolucion_Final_Informatica_1" utilizando funciones y separacion de archivos.
+# Contenido:
+En este repositorio nos encontraremos con las prácticas y trabajos prácticos centrales de la materia Informática 2 UTN_FRA.
