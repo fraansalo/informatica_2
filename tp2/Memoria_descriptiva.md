@@ -27,5 +27,9 @@ Un buen proceso de enfriamiento es fundamental para el resultado final de la sol
 
 
 ![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/800px-RSS_Components_of_a_Profile1.svg.png?raw=true)
+![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/kester1.jpg?raw=true)
+
+
+
 
 
