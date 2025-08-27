@@ -30,6 +30,8 @@ Un buen proceso de enfriamiento es fundamental para el resultado final de la sol
 ![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/kester1.jpg?raw=true)
 
 
+---
+En las imagenes podemos ver algunos ejemplos de curvas de reflow que se utilizarán como guía para modelar la idea.
 
 
 
