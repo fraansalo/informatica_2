@@ -26,5 +26,6 @@ En esta etapa se produce la fusión completa y la reacción de humectación para
 Un buen proceso de enfriamiento es fundamental para el resultado final de la soldadura. Es importante que la curva de de enfríado no sea pronunciada, ni muy rápida ni lenta. Un plazo de 30 a 50 segundos suele ser lo ideal. 
 
 
-![curva_reflow](images/kester1.jpg)
+![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/800px-RSS_Components_of_a_Profile1.svg.png?raw=true)
+
 
