@@ -25,16 +25,30 @@ En esta etapa se produce la fusión completa y la reacción de humectación para
 #### Cooling:
 Un buen proceso de enfriamiento es fundamental para el resultado final de la soldadura. Es importante que la curva de de enfríado no sea pronunciada, ni muy rápida ni lenta. Un plazo de 30 a 50 segundos suele ser lo ideal. 
 
+---
 
-![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/800px-RSS_Components_of_a_Profile1.svg.png?raw=true)
-![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/kester1.jpg?raw=true)
-
+En las siguientes imagenes podemos ver algunos ejemplos de curvas de reflow que se utilizarán como guía para modelar la idea.
 
 ---
-En las imagenes podemos ver algunos ejemplos de curvas de reflow que se utilizarán como guía para modelar la idea.
+
+>![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/800px-RSS_Components_of_a_Profile1.svg.png?raw=true)
+>![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/kester1.jpg?raw=true)
+
+---
 
 
-[Intro.pdf](https://github.com/fraansalo/informatica_2/blob/5d98e0c3dc995769c6904ed7fd2d0cfd7a1fc2f3/tp2/state%20Machine%20TP2_250828_113235_250828_114103.pdf)
+## Funcionamiento:
+
+Para establecer una idea funcional, y versatil se decidió que dentro del funcionamiento base, que sería seguir una curva de reflow genérica que funcione para la mayoría de pastas para soldar, se agregara un modo adicional:
+
+> **Manual**: Se establecerá un SetPoint por el usuario, el cual indicará una temperatura a la que se deberá alcanzar. Se mantendrá en esa temperatura por un tiempo determinado y luego se procede a enfríar. El modo de setear este SetPoint será por medio de botones fisicos que aumentarán o bajarán la temperatura con pasos de 10°C.
+>
+> **Automático**: En este modo la temperatura seguirá el circulo de la curva de reflujo o reflow para el uso específico de pastas de soldar. *(Se contemplará durante el desenlace del proyecto la posibilidad de modificar activamente parámetros de esa curva por el usuario.)*
+
+Cabe aclarar que estos modos se seleccionarán también con el uso de botones físicos ***Enter*** y ***Select***.
+
+Para poder visualizar de manera más clara y técnica del funcionamiento, se esbozó un diagrama de máquinas de estado preliminar como boceto:
+[**Boceto Maquina de estados.pdf**](https://github.com/fraansalo/informatica_2/blob/5d98e0c3dc995769c6904ed7fd2d0cfd7a1fc2f3/tp2/state%20Machine%20TP2_250828_113235_250828_114103.pdf)
 
 
 
