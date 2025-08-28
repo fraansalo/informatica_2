@@ -33,5 +33,9 @@ Un buen proceso de enfriamiento es fundamental para el resultado final de la sol
 ---
 En las imagenes podemos ver algunos ejemplos de curvas de reflow que se utilizarán como guía para modelar la idea.
 
+[boceto diagrama](tp2/pdf/state Machine TP2_250828_113235_250828_114103.pdf)
+
+
+
 
 
