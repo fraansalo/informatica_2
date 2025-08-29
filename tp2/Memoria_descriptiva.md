@@ -49,12 +49,14 @@ Cabe aclarar que estos modos se seleccionarán también con el uso de botones f�
 
 Para poder visualizar de manera más clara y técnica del funcionamiento, se esbozó un diagrama de máquinas de estado preliminar como boceto:
 [**Boceto Maquina de estados.pdf**](https://github.com/fraansalo/informatica_2/blob/5d98e0c3dc995769c6904ed7fd2d0cfd7a1fc2f3/tp2/state%20Machine%20TP2_250828_113235_250828_114103.pdf)
+
 ---
 
 En ese boceto se podrá ver de manera general como es la idea del funcionamiento del proyecto en sí con sus distintas fases. Se irá evaluando los nombres de las variables definitivos a medida que el código se valla desarrollando. 
 Tras retoque de detalles este sería el resultado final del diagrama de la máquina de estados:
 
 >![diagrama_maquinaestados](https://github.com/fraansalo/informatica_2/blob/b4c3982caba6b040ab1e8da4ddf514fa8bb27a62/images/diagrama_terminado.png)
+
 
 
 
