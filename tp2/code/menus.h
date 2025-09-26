@@ -1,5 +1,5 @@
-#ifndef VAR_H
-#define VAR_H
+#ifndef MENU_H
+#define MENU_H
 
 //definiciones para el menu de funcionamiento manual
 typedef enum {
@@ -52,6 +52,10 @@ typedef enum {
     BTN_ENTER,
     BTN_SELECT
 } Button_t;
+
+void buttons_set(Button_t btn);
+Button_t buttons_get(void);
+
 
 //definiciones de menus
 typedef enum {
