@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <menus.h>
 #include <config.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 
 void menuIdle(void) {

@@ -1,5 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
+#include <stdbool.h>
+
 
 //definiciones para el menu de funcionamiento manual
 typedef enum {
@@ -13,7 +15,7 @@ extern ManualState_t currentManualState;
 
 typedef void (*ManualHandler_t)(void);
 
-void stateIdle(void);
+void stateIdle(void);  
 void stateManualSetpoint(void);
 void stateManualHold(void);
 void stateManualCooling(void);
@@ -57,6 +59,13 @@ void buttons_set(Button_t btn);
 Button_t buttons_get(void);
 
 
+//definiciones para control temp.
+void control_setTarget(int16_t temp, int16_t h);
+void control_update(int16_t temp_current);
+bool control_isHeating(void);
+
+
+
 //definiciones de menus
 typedef enum {
     MENU_NONE,
@@ -78,7 +87,7 @@ MenuHandler_t menuTable[MENU_COUNT] = {
     menuIdle,
     menuManual,
     menuReflow,
-    menuConfig
+    menuConfig //a definir su implementación o no.
 };
 
 extern Menu_t currentMenu;
