@@ -21,8 +21,16 @@ void menuIdle(void) {
 }
 
 
+//FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO MANUAL
 void menuManual(void) {
-    manualStateTable[currentManualState]();
+    ManualState_t estado = manualStateTable[currentManualState]();
+    if(estado == MANUAL_EXIT){
+        currentManualState = MANUAL_SETPOINT;   //si termino, volvemos al estado inicial de manual
+        currentMenu = MENU_IDLE;                //si termino, retornamos al modo espera del menu.
+    }else{
+        currentManualState = estado;
+    }
+
 }
 
 ManualHandler_t manualStateTable[MANUAL_STATE_COUNT] = {
@@ -31,36 +39,34 @@ ManualHandler_t manualStateTable[MANUAL_STATE_COUNT] = {
     stateManualCooling
 };
 
-void stateManualSetpoint(void){
+ManualState_t stateManualSetpoint(void){
     Button_t btn = buttons_get();
-    if(btn == BTN_UP){
-        targetTemp += 10;
-    }
-    else if(btn == BTN_DOWN){
-        targetTemp -= 10;
-    }
-    else if(btn == BTN_ENTER){
+    if(btn == BTN_UP) targetTemp += 10;
+    if(btn == BTN_DOWN)targetTemp -= 10;
+    if(btn == BTN_ENTER){
         //se configuraria un timer
-        currentManualState = MANUAL_HOLD;
+        return MANUAL_HOLD;
     }
+    return MANUAL_SETPOINT;
 }
 
-void stateManualHold(void){
+ManualState_t stateManualHold(void){
     control_setTarget(targetTemp,TEMP_HYSTERESIS);
     control_update(temp_current);
     //se verifica el tiempo transcurrido del timer.
-    //deberia encontrarse la manera de simular el crecimiento y decrecimiento de temp
-    //una vez acabado el manualHold currentManualState pasaría a MANUAL_COOLING.
+
+    // if (state_timer == 0) return MANUAL_COOLING; Una vez configurado el timer
+    // return MANUAL_HOLD;
 }
 
-void stateManualCooling(void){
+ManualState_t stateManualCooling(void){
     control_reset();//setea las temperaturas a default
-    //deberia encontrarse la manera de simular el crecimiento y decrecimiento de temp
-    currentManualState = MANUAL_SETPOINT;
-    currentMenu = MENU_IDLE;
+    if(temp_current<=TEMP_COOLED) return MANUAL_EXIT;
+    return MANUAL_COOLING;
 }
 
 
-void menuReflow(void) {
+//FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO REFLOW
+void menuReflow(void) {     //queda pendiente de cambio y modificacion
     reflowStateTable[currentReflowState]();
 }

@@ -9,17 +9,18 @@ typedef enum {
     MANUAL_SETPOINT,
     MANUAL_HOLD,
     MANUAL_COOLING,
+    MANUAL_EXIT,
     MANUAL_STATE_COUNT
 } ManualState_t;
 
 extern ManualState_t currentManualState;
 
-typedef void (*ManualHandler_t)(void);
+typedef ManualState_t (*ManualHandler_t)(void);
 
-void stateIdle(void);  
-void stateManualSetpoint(void);
-void stateManualHold(void);
-void stateManualCooling(void);
+ManualState_t stateIdle(void);  
+ManualState_t stateManualSetpoint(void);
+ManualState_t stateManualHold(void);
+ManualState_t stateManualCooling(void);
 
 extern ManualHandler_t manualStateTable[MANUAL_STATE_COUNT];
 
@@ -36,7 +37,7 @@ typedef enum {
 
 extern ReflowState_t currentReflowState;
 
-typedef void (*ReflowHandler_t)(void);
+typedef void (*ReflowHandler_t)(void);  //queda pendiente de cambio y modificacion
 
 void stateReflowPreheat(void);
 void stateReflowSoak(void);
@@ -70,7 +71,6 @@ void control_reset(void);
 
 
 //definiciones de menus
-
 typedef enum {
     MENU_NONE,
     MENU_IDLE,
@@ -95,6 +95,5 @@ MenuHandler_t menuTable[MENU_COUNT] = {
 };
 
 extern Menu_t currentMenu;
-
 
 #endif
