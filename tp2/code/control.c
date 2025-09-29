@@ -3,10 +3,16 @@
 #include <stdint.h>
 
 
-static int16_t targetTemp = 0;
-static int16_t h = 0;
-static bool heating = false;
+extern int16_t targetTemp = TEMP_COOLED;
+extern int16_t temp_current = TEMP_COOLED;
+extern int16_t h = TEMP_HYSTERESIS;
+extern bool heating = false;
 
+void control_reset(void){
+    targetTemp = TEMP_COOLED;
+    h = TEMP_HYSTERESIS;
+    heating = false;
+}
 
 void control_setTarget(int16_t temp, int16_t hysteresis) {
     targetTemp = temp;

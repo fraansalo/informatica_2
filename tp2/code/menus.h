@@ -1,6 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 #include <stdbool.h>
+#include <stdint.h>
 
 
 //definiciones para el menu de funcionamiento manual
@@ -63,10 +64,13 @@ Button_t buttons_get(void);
 void control_setTarget(int16_t temp, int16_t h);
 void control_update(int16_t temp_current);
 bool control_isHeating(void);
+void control_reset(void);
+
 
 
 
 //definiciones de menus
+
 typedef enum {
     MENU_NONE,
     MENU_IDLE,

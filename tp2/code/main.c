@@ -6,12 +6,7 @@
 
 
 int main(void) {
-
-    ManualState_t currentManualState = MANUAL_SETPOINT;
-    ReflowState_t currentReflowState = REFLOW_PREHEAT;
-
-
-    system_init();
+    system_init(); //a definir cuando se haga el seteo de la API.
     while (1) {
         menuTable[currentMenu]();  // ejecuta el handler del menú actual
     }
