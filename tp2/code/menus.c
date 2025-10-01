@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <menus.h>
-#include <config.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include "menus.h"
+#include "config.h"
 #include <control.c>
 
 ManualState_t currentManualState = MANUAL_SETPOINT;
@@ -20,47 +17,116 @@ void menuIdle(void) {
     }
 }
 
-
+//*****************************************************
+//FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO MANUAL
+//*****************************************************
 void menuManual(void) {
-    manualStateTable[currentManualState]();
+    ManualState_t estado = manualStateTable[currentManualState]();
+    if(estado == MANUAL_EXIT){
+        currentManualState = MANUAL_SETPOINT;   //si termino, volvemos al estado inicial de manual
+        currentMenu = MENU_IDLE;                //si termino, retornamos al modo espera del menu.
+        control_reset();
+    }else{
+        currentManualState = estado;
+    }
 }
 
 ManualHandler_t manualStateTable[MANUAL_STATE_COUNT] = {
     stateManualSetpoint,
     stateManualHold,
-    stateManualCooling
+    stateManualCooling,
+    NULL
 };
 
-void stateManualSetpoint(void){
+ManualState_t stateManualSetpoint(void){
     Button_t btn = buttons_get();
-    if(btn == BTN_UP){
-        targetTemp += 10;
-    }
-    else if(btn == BTN_DOWN){
-        targetTemp -= 10;
-    }
-    else if(btn == BTN_ENTER){
+    if(btn == BTN_UP) targetTemp += 10;
+    if(btn == BTN_DOWN)targetTemp -= 10;
+    if(btn == BTN_ENTER){
         //se configuraria un timer
-        currentManualState = MANUAL_HOLD;
+        return MANUAL_HOLD;
     }
+    return MANUAL_SETPOINT;
 }
 
-void stateManualHold(void){
+ManualState_t stateManualHold(void){
     control_setTarget(targetTemp,TEMP_HYSTERESIS);
     control_update(temp_current);
     //se verifica el tiempo transcurrido del timer.
-    //deberia encontrarse la manera de simular el crecimiento y decrecimiento de temp
-    //una vez acabado el manualHold currentManualState pasaría a MANUAL_COOLING.
+
+    // if (state_timer == 0) return MANUAL_COOLING; Una vez configurado el timer
+    // return MANUAL_HOLD;
 }
 
-void stateManualCooling(void){
+ManualState_t stateManualCooling(void){
     control_reset();//setea las temperaturas a default
-    //deberia encontrarse la manera de simular el crecimiento y decrecimiento de temp
-    currentManualState = MANUAL_SETPOINT;
-    currentMenu = MENU_IDLE;
+    if(temp_current<=TEMP_COOLED) return MANUAL_EXIT;
+    return MANUAL_COOLING;
 }
 
 
-void menuReflow(void) {
-    reflowStateTable[currentReflowState]();
+
+//*****************************************************
+//FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO REFLOW
+//*****************************************************
+void menuReflow(void) {     
+    ManualState_t estado = reflowStateTable[currentReflowState]();
+    if(estado == REFLOW_EXIT){
+        currentReflowState = REFLOW_PREHEAT;   //si termino, volvemos al estado inicial de reflow.
+        currentMenu = MENU_IDLE;               //si termino, retornamos al modo espera del menu.
+        control_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo. 
+    }else{
+        currentManualState = estado;
+    }
+}
+
+ReflowHandler_t reflowStateTable[REFLOW_STATE_COUNT] = {
+    stateReflowPreheat,
+    stateReflowSoak,
+    stateReflowRamp,
+    stateReflowPeak,
+    stateReflowCooling,
+    NULL
+};
+
+ReflowState_t stateReflowPreheat(void){
+    control_setTarget(TEMP_PREHEAT_TARGET,TEMP_HYSTERESIS);
+    control_update(temp_current);
+    if(temp_current>=TEMP_PREHEAT_TARGET){
+        return REFLOW_SOAK;
+    }return REFLOW_PREHEAT;
+}
+
+ReflowState_t stateReflowSoak(void){
+    control_setTarget(TEMP_SOAK_TARGET,TEMP_HYSTERESIS);
+    control_update(temp_current);
+    //se verifica el tiempo transcurrido del timer.
+
+    // if (state_timer == 0) return REFLOW_RAMP; Una vez configurado el timer
+    // return REFLOW_SOAK;
+}
+
+ReflowState_t stateReflowRamp(void){
+    control_setTarget(TEMP_RAMP_TARGET, TEMP_HYSTERESIS);
+    control_update(temp_current);
+
+    if (temp_current >= TEMP_RAMP_TARGET) {
+        return REFLOW_PEAK;
+    }
+    return REFLOW_RAMP;
+}
+
+ReflowState_t stateReflowPeak(void){
+    control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
+    control_update(temp_current);
+    //se verifica el tiempo transcurrido del timer.
+
+    // if (state_timer == 0) return REFLOW_COOLING; Una vez configurado el timer
+    // return REFLOW_PEAK;
+}
+
+ReflowState_t stateReflowCooling(void){
+    control_reset();//setea las temperaturas a default
+    if(temp_current<=TEMP_COOLED) return REFLOW_EXIT;
+    return REFLOW_COOLING;
 }
