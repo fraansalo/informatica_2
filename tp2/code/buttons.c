@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <menus.h>
-#include <config.h>
-#include <stdbool.h>
+#include "menus.h"
+#include "config.h"
 
 
 static Button_t last_button = BTN_NONE;

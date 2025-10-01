@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <menus.h>
-#include <config.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include "menus.h"
+#include "config.h"
 #include <control.c>
 
 ManualState_t currentManualState = MANUAL_SETPOINT;
@@ -20,23 +17,25 @@ void menuIdle(void) {
     }
 }
 
-
+//*****************************************************
 //FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO MANUAL
+//*****************************************************
 void menuManual(void) {
     ManualState_t estado = manualStateTable[currentManualState]();
     if(estado == MANUAL_EXIT){
         currentManualState = MANUAL_SETPOINT;   //si termino, volvemos al estado inicial de manual
         currentMenu = MENU_IDLE;                //si termino, retornamos al modo espera del menu.
+        control_reset();
     }else{
         currentManualState = estado;
     }
-
 }
 
 ManualHandler_t manualStateTable[MANUAL_STATE_COUNT] = {
     stateManualSetpoint,
     stateManualHold,
-    stateManualCooling
+    stateManualCooling,
+    NULL
 };
 
 ManualState_t stateManualSetpoint(void){
@@ -66,7 +65,68 @@ ManualState_t stateManualCooling(void){
 }
 
 
+
+//*****************************************************
 //FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO REFLOW
-void menuReflow(void) {     //queda pendiente de cambio y modificacion
-    reflowStateTable[currentReflowState]();
+//*****************************************************
+void menuReflow(void) {     
+    ManualState_t estado = reflowStateTable[currentReflowState]();
+    if(estado == REFLOW_EXIT){
+        currentReflowState = REFLOW_PREHEAT;   //si termino, volvemos al estado inicial de reflow.
+        currentMenu = MENU_IDLE;               //si termino, retornamos al modo espera del menu.
+        control_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo. 
+    }else{
+        currentManualState = estado;
+    }
+}
+
+ReflowHandler_t reflowStateTable[REFLOW_STATE_COUNT] = {
+    stateReflowPreheat,
+    stateReflowSoak,
+    stateReflowRamp,
+    stateReflowPeak,
+    stateReflowCooling,
+    NULL
+};
+
+ReflowState_t stateReflowPreheat(void){
+    control_setTarget(TEMP_PREHEAT_TARGET,TEMP_HYSTERESIS);
+    control_update(temp_current);
+    if(temp_current>=TEMP_PREHEAT_TARGET){
+        return REFLOW_SOAK;
+    }return REFLOW_PREHEAT;
+}
+
+ReflowState_t stateReflowSoak(void){
+    control_setTarget(TEMP_SOAK_TARGET,TEMP_HYSTERESIS);
+    control_update(temp_current);
+    //se verifica el tiempo transcurrido del timer.
+
+    // if (state_timer == 0) return REFLOW_RAMP; Una vez configurado el timer
+    // return REFLOW_SOAK;
+}
+
+ReflowState_t stateReflowRamp(void){
+    control_setTarget(TEMP_RAMP_TARGET, TEMP_HYSTERESIS);
+    control_update(temp_current);
+
+    if (temp_current >= TEMP_RAMP_TARGET) {
+        return REFLOW_PEAK;
+    }
+    return REFLOW_RAMP;
+}
+
+ReflowState_t stateReflowPeak(void){
+    control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
+    control_update(temp_current);
+    //se verifica el tiempo transcurrido del timer.
+
+    // if (state_timer == 0) return REFLOW_COOLING; Una vez configurado el timer
+    // return REFLOW_PEAK;
+}
+
+ReflowState_t stateReflowCooling(void){
+    control_reset();//setea las temperaturas a default
+    if(temp_current<=TEMP_COOLED) return REFLOW_EXIT;
+    return REFLOW_COOLING;
 }
