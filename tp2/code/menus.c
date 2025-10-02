@@ -23,9 +23,7 @@ void menuIdle(void) {
 void menuManual(void) {
     ManualState_t estado = manualStateTable[currentManualState]();
     if(estado == MANUAL_EXIT){
-        currentManualState = MANUAL_SETPOINT;   //si termino, volvemos al estado inicial de manual
-        currentMenu = MENU_IDLE;                //si termino, retornamos al modo espera del menu.
-        control_reset();
+        system_reset();
     }else{
         currentManualState = estado;
     }
@@ -72,9 +70,7 @@ ManualState_t stateManualCooling(void){
 void menuReflow(void) {     
     ManualState_t estado = reflowStateTable[currentReflowState]();
     if(estado == REFLOW_EXIT){
-        currentReflowState = REFLOW_PREHEAT;   //si termino, volvemos al estado inicial de reflow.
-        currentMenu = MENU_IDLE;               //si termino, retornamos al modo espera del menu.
-        control_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo. 
+        system_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo.
     }else{
         currentManualState = estado;
     }

@@ -13,6 +13,7 @@ void control_reset(void){
     targetTemp = TEMP_COOLED;
     h = TEMP_HYSTERESIS;
     heating = false;
+    temp_current = TEMP_COOLED; 
 }
 
 //seteo la temperatura a alcanzar en la etapa correspondiente.
@@ -33,4 +34,11 @@ void control_update(int16_t temp_current) {
 
 bool control_isHeating(void) {
     return heating;
+}
+
+void system_reset(void) {
+    currentMenu = MENU_IDLE;
+    currentManualState = MANUAL_SETPOINT;
+    currentReflowState = REFLOW_PREHEAT;
+    control_reset();
 }
