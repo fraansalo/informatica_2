@@ -1,5 +1,6 @@
+
 /*
- * Titel: avr_Gpio.h Header file and definitios for Gpio AVR API
+ * Title: avr_Gpio.h Header file and definitios for Gpio AVR API
  *
  *  Created on: 8 de jul. de 2015
  *      Author: Ing. Damian Corbalan

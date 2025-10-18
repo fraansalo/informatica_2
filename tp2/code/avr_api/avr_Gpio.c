@@ -22,8 +22,6 @@
  */
 
 #include "avr_Gpio.h"
-#include "avr/io.h"
-
 
 void init_gpio(GpioInitStructure_AVR Gpio) {
 	if (Gpio.modo == avr_GPIO_mode_Output) {

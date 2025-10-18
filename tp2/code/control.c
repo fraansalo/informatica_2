@@ -3,10 +3,10 @@
 #include <stdint.h>
 
 
-extern int16_t targetTemp = TEMP_COOLED;
-extern int16_t temp_current = TEMP_COOLED;
-extern int16_t h = TEMP_HYSTERESIS;
-extern bool heating = false;
+int16_t targetTemp = TEMP_COOLED;
+int16_t temp_current = TEMP_COOLED;
+int16_t h = TEMP_HYSTERESIS;
+bool heating = false;
 
 //Me resetea la temperatura actual a temperatura ambiente
 void control_reset(void){

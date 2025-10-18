@@ -1,9 +1,14 @@
 #include "menus.h"
 #include "config.h"
-#include <control.c>
+
 
 ManualState_t currentManualState = MANUAL_SETPOINT;
 ReflowState_t currentReflowState = REFLOW_PREHEAT;
+
+extern int16_t targetTemp = TEMP_COOLED;
+extern int16_t temp_current = TEMP_COOLED;
+extern int16_t h = TEMP_HYSTERESIS;
+extern bool heating = false;
 
 void menuIdle(void) {
     Button_t btn = buttons_get();
