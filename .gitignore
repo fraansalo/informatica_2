@@ -1,0 +1,14 @@
+#ignorar archivos compilados
+*.exe
+*.o
+*.obj
+*.out
+
+#archivo respaldo
+*~
+*.bak
+*.tmp
+
+#archivos de logs
+*.log
+
