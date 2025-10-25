@@ -6,7 +6,7 @@
 
 
 int main(void) {
-    system_init(); //a definir cuando se haga el seteo de la API.
+    system_init();
     while (1) {
         menuTable[currentMenu]();  // ejecuta el handler del menú actual
     }
