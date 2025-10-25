@@ -25,6 +25,7 @@
 #define AVR_EXTINT_H_
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr_compatibilidad.h>
 
 //Micros con PCINT
 #define defined_AVR_PCINT defined (__AVR_ATmega328__) || (__AVR_ATmega328P__) || (__AVR_ATmega88__) || (__AVR_ATmega88P__) ||(__AVR_ATmega168__) || (__AVR_ATmega168P__) || (__AVR_ATmega48P__) || (__AVR_ATmega48__)
@@ -111,12 +112,12 @@ typedef enum
 
 typedef unsigned long avr_pcint_pin_t;
 void (*avr_pcint_handler)(void);
-typedef struct{
-	Avr_Pcint_pin_t pines;
-	void (*avr_pcint_handler)(void);
-}PcintInitStructure_AVR;
+// typedef struct{
+// 	Avr_Pcint_pin_t pines;
+// 	void (*avr_pcint_handler)(void);
+// }PcintInitStructure_AVR;
 
-void init_Pcint(PcintInitStructure_AVR);
+// void init_Pcint(PcintInitStructure_AVR);
 
 
 

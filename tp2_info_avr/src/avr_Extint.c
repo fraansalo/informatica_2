@@ -54,7 +54,7 @@ void init_extern_interrupt(ExternalInterruptInitStructure_AVR ExternalIrq_init)
 					interrupcion_external3 = ExternalIrq_init.avr_ext_interrupt_handler;
 					break;
 
-	case avr_INT4:	EICRB &= ~3; //limpia los valores del control para esta interrupcion
+	case avr_INT4:	EICRA &= ~3; //limpia los valores del control para esta interrupcion
 					EICRB |= ((ExternalIrq_init.modo == avr_ext_int_lowlevel) ? 0 : ((ExternalIrq_init.modo == avr_ext_int_anychange) ? 1 :
 							 ((ExternalIrq_init.modo == avr_ext_int_fallingedge) ? 2 : ((ExternalIrq_init.modo == avr_ext_int_risingedge) ? 3 : 0))));
 					interrupcion_external4 = ExternalIrq_init.avr_ext_interrupt_handler;
@@ -94,85 +94,101 @@ ISR(INT1_vect)
 {
 	(*interrupcion_external1)();
 }
-
+#ifdef INT2_vect
 ISR(INT2_vect)
 {
 	(*interrupcion_external2)();
 }
+#endif
+
+#ifdef INT3_vect
 ISR(INT3_vect)
 {
 	(*interrupcion_external3)();
 }
+#endif
+
+#ifdef INT4_vect
 ISR(INT4_vect)
 {
 	(*interrupcion_external4)();
 }
+#endif
+
+#ifdef INT5_vect
 ISR(INT5_vect)
 {
 	(*interrupcion_external5)();
 }
+#endif
+
+#ifdef INT6_vect
 ISR(INT6_vect)
 {
 	(*interrupcion_external6)();
 }
+#endif
+
+#ifdef INT7_vect
 ISR(INT7_vect)
 {
 	(*interrupcion_external7)();
 }
-
-
-
-#if defined_AVR_PCINT
-//Funcion de incializacion
-/**
- *  Se podria usar la misma rutina de interrupcion para pines conectados en diferentes PCINT
- */
-void init_Pcint(PcintInitStructure_AVR pcint_struct)
-{
-
-	unsigned char aux;
-
-	aux = (unsigned char)pcint_struct.pines & 0xff;
-	if(aux)//PCINT0
-	{
-	interrupcion_PCINT0 = pcint_struct.avr_pcint_handler; //tener cuidado en las redefiniciones de la funcion de interrupcion
-	PCICR |= AVR_PCIE0;
-	PCIFR |= AVR_PCIF0;
-	PCMSK0 |= pcint_struct.pines;
-	}
-	aux = (unsigned char)((pcint_struct.pines >> 8)& 0xff);
-	if (aux) // PCINT1
-	{
-	interrupcion_PCINT1 = pcint_struct.avr_pcint_handler;
-	PCICR |= AVR_PCIE1;
-	PCIFR |= AVR_PCIF1;
-	PCMSK1 |= pcint_struct.pines>>8;
-	}
-	aux = (unsigned char)((pcint_struct.pines >> 16)& 0xff);
-	if (aux) // PCINT2
-	{
-	interrupcion_PCINT2 = pcint_struct.avr_pcint_handler;
-	PCICR |= AVR_PCIE2;
-	PCIFR |= AVR_PCIF2;
-	PCMSK2 |= pcint_struct.pines>>16;
-	}
-
-}
-
-
-ISR(PCINT0_vect)
-{
-	(*interrupcion_PCINT0)();
-}
-
-ISR(PCINT1_vect)
-{
-	(*interrupcion_PCINT1)();
-}
-
-ISR(PCINT2_vect)
-{
-	(*interrupcion_PCINT2)();
-}
 #endif
+
+
+// #if defined_AVR_PCINT
+// //Funcion de incializacion
+// /**
+//  *  Se podria usar la misma rutina de interrupcion para pines conectados en diferentes PCINT
+//  */
+
+// // void init_Pcint(PcintInitStructure_AVR pcint_struct)
+// // {
+
+// // 	unsigned char aux;
+
+// // 	aux = (unsigned char)pcint_struct.pines & 0xff;
+// // 	if(aux)//PCINT0
+// // 	{
+// // 	interrupcion_PCINT0 = pcint_struct.avr_pcint_handler; //tener cuidado en las redefiniciones de la funcion de interrupcion
+// // 	PCICR |= AVR_PCIE0;
+// // 	PCIFR |= AVR_PCIF0;
+// // 	PCMSK0 |= pcint_struct.pines;
+// // 	}
+// // 	aux = (unsigned char)((pcint_struct.pines >> 8)& 0xff);
+// // 	if (aux) // PCINT1
+// // 	{
+// // 	interrupcion_PCINT1 = pcint_struct.avr_pcint_handler;
+// // 	PCICR |= AVR_PCIE1;
+// // 	PCIFR |= AVR_PCIF1;
+// // 	PCMSK1 |= pcint_struct.pines>>8;
+// // 	}
+// // 	aux = (unsigned char)((pcint_struct.pines >> 16)& 0xff);
+// // 	if (aux) // PCINT2
+// // 	{
+// // 	interrupcion_PCINT2 = pcint_struct.avr_pcint_handler;
+// // 	PCICR |= AVR_PCIE2;
+// // 	PCIFR |= AVR_PCIF2;
+// // 	PCMSK2 |= pcint_struct.pines>>16;
+// // 	}
+
+// // }
+
+
+// ISR(PCINT0_vect)
+// {
+// 	(*interrupcion_PCINT0)();
+// }
+
+// ISR(PCINT1_vect)
+// {
+// 	(*interrupcion_PCINT1)();
+// }
+
+// ISR(PCINT2_vect)
+// {
+// 	(*interrupcion_PCINT2)();
+// }
+// #endif
 

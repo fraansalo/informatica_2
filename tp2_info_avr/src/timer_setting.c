@@ -8,7 +8,7 @@ static volatile bool tick_flag = false;
 static volatile uint16_t tick_count = 0;
 static volatile bool seconds_flag = false;
 
-void systick_handler(void){
+static void systick_handler(void){
     tick_flag = true;
     tick_count++;
     if(tick_count >= 100){
@@ -25,4 +25,18 @@ void timer_init(void){
 
     init_Systick_timer(systick);
     sei();  //interrupciones globales
+}
+
+bool timer_tick(){  //ajuste de flags para indicar que se cumplio un ciclo.
+    if(tick_flag){
+        tick_flag = false;
+        return true;
+    }return false;
+}
+
+bool timer_seconds(void){ ////ajuste de flags para indicar que se un tiempo seteado.
+    if(seconds_flag){
+        seconds_flag = false;
+        return true;
+    }return false;
 }

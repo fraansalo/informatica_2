@@ -1,7 +1,15 @@
 #include "gpio_setting.h"
 #include "avr_Gpio.h"
+#include "timer_setting.h"
+#include "extint_setting.h"
 #include "config.h"
 #include <avr/io.h>
+
+void system_init(){//inicializo los gpios, timer, interrupciones.
+    gpio_init();
+    timer_init();
+    external_interrupt_init();
+}
 
 void gpio_init(void) {
     buttons_init();

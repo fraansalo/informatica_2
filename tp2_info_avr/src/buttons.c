@@ -2,7 +2,7 @@
 #include "config.h"
 
 
-static Button_t last_button = BTN_NONE;
+volatile static Button_t last_button = BTN_NONE;
 
 void buttons_set(Button_t btn){
     last_button = btn;

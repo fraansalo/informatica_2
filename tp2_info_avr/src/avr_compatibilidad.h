@@ -25,6 +25,10 @@
 #define TCCR2 TCCR2B
 #endif
 
+#ifndef EICRB
+#define EICRB EICRA   // para compatibilidad: usa EICRA
+#endif
+
 #endif // __AVR_ATmega328P__
 
-#endif // COMPAT_AVR_H
+#endif
