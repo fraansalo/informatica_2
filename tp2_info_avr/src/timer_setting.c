@@ -22,7 +22,6 @@ void timer_init(void){
     systick.timernumber = avr_TIM0;
     systick.time_ms = 10;
     systick.avr_systick_handler = systick_handler; //funcion que se ejecuta al finalizar la conversión
-
     init_Systick_timer(systick);
     sei();  //interrupciones globales
 }
@@ -35,9 +34,21 @@ bool timer_tick(){  //ajuste de flags para indicar que se cumplio un ciclo.
     }return false;
 }
 
-bool timer_seconds(void){ ////ajuste de flags para indicar que se un tiempo seteado.
+bool timer_seconds(void){ ////ajuste de flags para indicar que se cumplio un tiempo seteado.
     if(seconds_flag){
         seconds_flag = false;
         return true;
     }return false;
+}
+
+void timer_start(timer_t *t, uint16_t seconds){
+    t->remaining = seconds;
+    t->state = true;
+}
+void timer_stop(timer_t *t){
+    t->remaining = 0;
+    t->state = false;
+}
+bool timer_expired(timer_t *t){
+    return (!t->state);
 }
