@@ -27,7 +27,7 @@ void gpio_init(void);
 void buttons_init(void);
 void outputs_init(void);
 
-Button_t buttons_getter(void);
+Button_t buttons_polling(void);
 void heater_setter(bool on);
 void leds_setter(bool on);
 

@@ -30,6 +30,7 @@ void timer_init(void){
 bool timer_tick(){  //ajuste de flags para indicar que se cumplio un ciclo.
     if(tick_flag){
         tick_flag = false;
+        buttons_polling(); //hago el chequeo de los botones cada 10ms.
         return true;
     }return false;
 }

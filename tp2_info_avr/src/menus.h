@@ -17,14 +17,11 @@ typedef enum {
 } ManualState_t;
 
 extern ManualState_t currentManualState;
-
-typedef ManualState_t (*ManualHandler_t)(void);
-
 ManualState_t stateIdle(void);  
 ManualState_t stateManualSetpoint(void);
 ManualState_t stateManualHold(void);
 ManualState_t stateManualCooling(void);
-
+typedef ManualState_t (*ManualHandler_t)(void);
 extern ManualHandler_t manualStateTable[MANUAL_STATE_COUNT];
 
 //*****************************************************
@@ -41,15 +38,12 @@ typedef enum {
 } ReflowState_t;
 
 extern ReflowState_t currentReflowState;
-
-typedef ReflowState_t (*ReflowHandler_t)(void);  //queda pendiente de cambio y modificacion
-
 ReflowState_t stateReflowPreheat(void);
 ReflowState_t stateReflowSoak(void);
 ReflowState_t stateReflowRamp(void);
 ReflowState_t stateReflowPeak(void);
 ReflowState_t stateReflowCooling(void);
-
+typedef ReflowState_t (*ReflowHandler_t)(void);  //queda pendiente de cambio y modificacion
 extern ReflowHandler_t reflowStateTable[REFLOW_STATE_COUNT];
 
 //*****************************************************
@@ -62,7 +56,6 @@ typedef enum {
     BTN_ENTER,
     BTN_SELECT
 } Button_t;
-
 void buttons_set(Button_t btn);
 Button_t buttons_get(void);
 
@@ -92,7 +85,6 @@ typedef enum {
 void menuIdle(void);
 void menuManual(void);
 void menuReflow(void);
-void menuConfig(void);
 
 typedef void (*MenuHandler_t)(void);
 
@@ -100,9 +92,7 @@ MenuHandler_t menuTable[MENU_COUNT] = {
     menuIdle,
     menuManual,
     menuReflow,
-    menuConfig //a definir su implementación o no.
 };
-
 extern Menu_t currentMenu;
 
 #endif

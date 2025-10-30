@@ -14,7 +14,7 @@
 #define TEMP_COOLED 24
 #define TIM_COOLED 50
 
-
+#define DEBOUNCE_DELAY_MS 30
 #define TEMP_HYSTERESIS 5
 
 #endif
