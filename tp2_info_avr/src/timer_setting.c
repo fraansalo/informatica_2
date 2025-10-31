@@ -1,8 +1,5 @@
-#include "menus.h"
-#include "gpio_setting.h"
 #include "timer_setting.h"
-#include <avr/interrupt.h>
-#include "avr_Timers.h"
+
 
 static volatile bool tick_flag = false;
 static volatile uint16_t tick_count = 0;

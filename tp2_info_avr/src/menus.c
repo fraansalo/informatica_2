@@ -1,5 +1,7 @@
 #include "menus.h"
 #include "config.h"
+#include "timer_setting.h"
+
 
 
 ManualState_t currentManualState = MANUAL_SETPOINT;
@@ -46,24 +48,37 @@ ManualState_t stateManualSetpoint(void){
     if(btn == BTN_UP) targetTemp += 10;
     if(btn == BTN_DOWN)targetTemp -= 10;
     if(btn == BTN_ENTER){
-        //se configuraria un timer
         return MANUAL_HOLD;
     }
     return MANUAL_SETPOINT;
 }
 
 ManualState_t stateManualHold(void){
+    static uint16_t hold_seconds = 0;
+    
     control_setTarget(targetTemp,TEMP_HYSTERESIS);
     control_update(temp_current);
-    //se verifica el tiempo transcurrido del timer.
-
-    // if (state_timer == 0) return MANUAL_COOLING; Una vez configurado el timer
-    // return MANUAL_HOLD;
+    
+    if(timer_seconds()){
+        hold_seconds++;
+        if(hold_seconds>=MANUAL_HOLD){
+            hold_seconds=0;
+            return MANUAL_COOLING;
+        }
+    }
 }
 
 ManualState_t stateManualCooling(void){
+    static uint16_t manual_cooled_seconds = 0;
+
     control_reset();//setea las temperaturas a default
-    if(temp_current<=TEMP_COOLED) return MANUAL_EXIT;
+    if(timer_seconds()){
+        manual_cooled_seconds++;
+        if(temp_current<=TEMP_COOLED && manual_cooled_seconds >= TIM_COOLED){ 
+            manual_cooled_seconds = 0;
+            return MANUAL_EXIT;
+            }
+        }
     return MANUAL_COOLING;
 }
 
@@ -99,12 +114,18 @@ ReflowState_t stateReflowPreheat(void){
 }
 
 ReflowState_t stateReflowSoak(void){
+    static uint16_t reflowsoak_seconds = 0;
     control_setTarget(TEMP_SOAK_TARGET,TEMP_HYSTERESIS);
     control_update(temp_current);
-    //se verifica el tiempo transcurrido del timer.
-
-    // if (state_timer == 0) return REFLOW_RAMP; Una vez configurado el timer
-    // return REFLOW_SOAK;
+    
+    if(timer_seconds()){
+        reflowsoak_seconds++;
+        if(reflowsoak_seconds > TIM_SOAK_TARGET){
+            reflowsoak_seconds = 0;
+            return REFLOW_RAMP;
+        }
+    }
+    return REFLOW_SOAK;
 }
 
 ReflowState_t stateReflowRamp(void){
@@ -118,16 +139,29 @@ ReflowState_t stateReflowRamp(void){
 }
 
 ReflowState_t stateReflowPeak(void){
+    static uint16_t reflowpeak_seconds = 0;
     control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
     control_update(temp_current);
-    //se verifica el tiempo transcurrido del timer.
-
-    // if (state_timer == 0) return REFLOW_COOLING; Una vez configurado el timer
-    // return REFLOW_PEAK;
+    
+    if(timer_seconds()){
+        reflowpeak_seconds++;
+        if(reflowpeak_seconds >= TIM_PEAK_TARGET){
+            reflowpeak_seconds = 0;
+            return REFLOW_COOLING;
+        }
+    }
+    return REFLOW_PEAK;
 }
 
 ReflowState_t stateReflowCooling(void){
+    static uint16_t reflow_cooling_seconds = 0;
     control_reset();//setea las temperaturas a default
-    if(temp_current<=TEMP_COOLED) return REFLOW_EXIT;
+    if(timer_seconds()){
+        reflow_cooling_seconds++;
+        if(reflow_cooling_seconds>=TIM_COOLED && temp_current <= TEMP_COOLED){
+            reflow_cooling_seconds = 0;
+            return REFLOW_EXIT;
+        }
+    }
     return REFLOW_COOLING;
 }
