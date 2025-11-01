@@ -54,6 +54,9 @@ ManualState_t stateManualSetpoint(void){
 }
 
 ManualState_t stateManualHold(void){
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     static uint16_t hold_seconds = 0;
     
     control_setTarget(targetTemp,TEMP_HYSTERESIS);
@@ -69,6 +72,9 @@ ManualState_t stateManualHold(void){
 }
 
 ManualState_t stateManualCooling(void){
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     static uint16_t manual_cooled_seconds = 0;
 
     control_reset();//setea las temperaturas a default
@@ -106,6 +112,9 @@ ReflowHandler_t reflowStateTable[REFLOW_STATE_COUNT] = {
 };
 
 ReflowState_t stateReflowPreheat(void){
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     control_setTarget(TEMP_PREHEAT_TARGET,TEMP_HYSTERESIS);
     control_update(temp_current);
     if(temp_current>=TEMP_PREHEAT_TARGET){
@@ -114,6 +123,9 @@ ReflowState_t stateReflowPreheat(void){
 }
 
 ReflowState_t stateReflowSoak(void){
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     static uint16_t reflowsoak_seconds = 0;
     control_setTarget(TEMP_SOAK_TARGET,TEMP_HYSTERESIS);
     control_update(temp_current);
@@ -129,6 +141,9 @@ ReflowState_t stateReflowSoak(void){
 }
 
 ReflowState_t stateReflowRamp(void){
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     control_setTarget(TEMP_RAMP_TARGET, TEMP_HYSTERESIS);
     control_update(temp_current);
 
@@ -139,8 +154,9 @@ ReflowState_t stateReflowRamp(void){
 }
 
 ReflowState_t stateReflowPeak(void){
-    if(adc_)
-
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     static uint16_t reflowpeak_seconds = 0;
     control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
     control_update(temp_current);
@@ -156,6 +172,9 @@ ReflowState_t stateReflowPeak(void){
 }
 
 ReflowState_t stateReflowCooling(void){
+    if(adc_ready()){
+        temp_current = (int16_t)adc_convertCelsius();
+    }
     static uint16_t reflow_cooling_seconds = 0;
     control_reset();//setea las temperaturas a default
     if(timer_seconds()){

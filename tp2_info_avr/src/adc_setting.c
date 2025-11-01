@@ -31,3 +31,7 @@ uint16_t adc_getter(void){
     adc_flag = false;
     return adc_value;
 }
+
+float adc_GetCelsius(void){
+    return adc_to_celsius(adc_getter());
+}
