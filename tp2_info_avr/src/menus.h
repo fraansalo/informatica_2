@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "config.h"
+#include "timer_setting.h"
+#include "adc_setting.h"
 
 //*****************************************************
 //definiciones para el menu de funcionamiento manual

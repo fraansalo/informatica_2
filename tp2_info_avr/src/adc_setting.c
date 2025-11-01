@@ -1,6 +1,5 @@
 #include "adc_setting.h"
-#include "avr_Adc.h"
-#include <avr/interrupt.h>
+
 
 volatile static uint16_t adc_value = 0;
 volatile static bool adc_flag = false;

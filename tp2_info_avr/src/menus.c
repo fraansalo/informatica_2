@@ -1,6 +1,6 @@
 #include "menus.h"
-#include "config.h"
-#include "timer_setting.h"
+
+
 
 
 
@@ -139,6 +139,8 @@ ReflowState_t stateReflowRamp(void){
 }
 
 ReflowState_t stateReflowPeak(void){
+    if(adc_)
+
     static uint16_t reflowpeak_seconds = 0;
     control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
     control_update(temp_current);

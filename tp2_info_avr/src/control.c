@@ -14,6 +14,7 @@ void control_reset(void){
     h = TEMP_HYSTERESIS;
     heating = false;
     temp_current = TEMP_COOLED; 
+    heater_setter(false);
 }
 
 //seteo la temperatura a alcanzar en la etapa correspondiente.
@@ -21,14 +22,17 @@ void control_setTarget(int16_t temp, int16_t hysteresis) {
     targetTemp = temp;
     h = hysteresis;
     heating = true; // arranca a calentar.
+    heater_setter(heating);
 }
 
 //hace el control recurrente para verificar si se calentó lo suficiente por hysteresis
 void control_update(int16_t temp_current) {
-    if (temp_current < (targetTemp - h)) {
-        heating = true;  //se actualizara con la activacion del algun elemento por ejemplo un RELE. 
-    } else if (temp_current > (targetTemp + h)) {
-        heating = false;  //se actualizara con la desactivacion del algun elemento por ejemplo un RELE.
+    if (temp_current <= (targetTemp - h)) {
+        heating = true;  
+        heater_setter(heating);
+    } else if (temp_current >= (targetTemp + h)) {
+        heating = false;  
+        heater_setter(heating);
     }
 }
 
