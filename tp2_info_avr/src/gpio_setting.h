@@ -23,7 +23,6 @@
 
 
 void system_init(void);
-void gpio_init(void);
 void buttons_init(void);
 void outputs_init(void);
 
