@@ -32,20 +32,8 @@
 #include <avr/interrupt.h>
 /***********************************************************************************************/
 /***********************************************************************************************/
-// Macro y variable General para manejo de a bit.
-typedef struct
-	{
-	unsigned char B0:1;
-	unsigned char B1:1;
-	unsigned char B2:1;
-	unsigned char B3:1;
-	unsigned char B4:1;
-	unsigned char B5:1;
-	unsigned char B6:1;
-	unsigned char B7:1;
-	}bit_t;
 
-#define REGBIT(reg,bt)	((volatile bit_t*)&reg)->B##bt	//MACRO PARA MANEJAR REGISTROS DE A BIT.
+//MACRO PARA MANEJAR REGISTROS DE A BIT.
 /***********************************************************************************************/
 /***********************************************************************************************/
 // Librerias de perifericos. Comentar la que no se use.

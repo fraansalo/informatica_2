@@ -25,7 +25,7 @@
 #define AVR_TIMERS_H_
 
 #include "avr_api.h"
-
+#include "avr_Gpio.h"
 typedef enum
 {
 	avr_TIM0 = 0,

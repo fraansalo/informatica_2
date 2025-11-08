@@ -59,6 +59,7 @@ typedef enum {
     BTN_ENTER,
     BTN_SELECT
 } Button_t;
+
 void buttons_set(Button_t btn);
 Button_t buttons_get(void);
 

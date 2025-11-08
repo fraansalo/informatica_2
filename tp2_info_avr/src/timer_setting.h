@@ -12,11 +12,5 @@ void timer_init(void);
 bool timer_tick(void);
 bool timer_seconds(void);
 
-void timer_start(timer_t *t, uint16_t seconds);
-void timer_stop(timer_t *t);
-bool timer_expired(timer_t *t);
-// void timer_task(void);
-
-
 
 #endif

@@ -38,14 +38,3 @@ bool timer_seconds(void){ ////ajuste de flags para indicar que se cumplio un tie
     }return false;
 }
 
-void timer_start(timer_t *t, uint16_t seconds){
-    t->remaining = seconds;
-    t->state = true;
-}
-void timer_stop(timer_t *t){
-    t->remaining = 0;
-    t->state = false;
-}
-bool timer_expired(timer_t *t){
-    return (!t->state);
-}

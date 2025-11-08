@@ -1,7 +1,7 @@
 #ifndef GPIO_SETTING_H
 #define GPIO_SETTING_H
 #include "avr_Gpio.h"
-#include "menus.h"
+#include <menus.h>
 
 #define BTN_UP_PORT    avr_GPIOD_OUT
 #define BTN_UP_PIN     avr_GPIO_PIN_2
@@ -26,7 +26,7 @@ void system_init(void);
 void buttons_init(void);
 void outputs_init(void);
 
-Button_t buttons_polling(void);
+void buttons_polling(void);
 void heater_setter(bool on);
 void leds_setter(bool on);
 

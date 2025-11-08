@@ -20,7 +20,7 @@ Button_t buttons_get(void){
 }
 
 //funcion para efectuar el control de los gpios de los botones.
-Button_t buttons_polling(void){
+void buttons_polling(void){
 
     if(last_button != BTN_NONE)return;
     Button_t current = BTN_NONE;
