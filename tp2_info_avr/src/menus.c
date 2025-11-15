@@ -1,16 +1,13 @@
 #include "menus.h"
 
-
-
-
-
+Menu_t currentMenu = MENU_IDLE;
 ManualState_t currentManualState = MANUAL_SETPOINT;
 ReflowState_t currentReflowState = REFLOW_PREHEAT;
 
-extern int16_t targetTemp = TEMP_COOLED;
-extern int16_t temp_current = TEMP_COOLED;
-extern int16_t h = TEMP_HYSTERESIS;
-extern bool heating = false;
+extern int16_t targetTemp;
+extern int16_t temp_current;
+extern int16_t h;
+extern bool heating;
 
 void menuIdle(void) {
     Button_t btn = buttons_get();
@@ -69,6 +66,7 @@ ManualState_t stateManualHold(void){
             return MANUAL_COOLING;
         }
     }
+    return MANUAL_HOLD;
 }
 
 ManualState_t stateManualCooling(void){
@@ -94,7 +92,7 @@ ManualState_t stateManualCooling(void){
 //FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO REFLOW
 //*****************************************************
 void menuReflow(void) {     
-    ManualState_t estado = reflowStateTable[currentReflowState]();
+    ReflowState_t estado = reflowStateTable[currentReflowState]();
     if(estado == REFLOW_EXIT){
         system_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo.
     }else{

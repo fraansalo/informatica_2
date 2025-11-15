@@ -8,6 +8,9 @@
 #include "timer_setting.h"
 #include "adc_setting.h"
 
+
+void system_reset(void);
+
 //*****************************************************
 //definiciones para el menu de funcionamiento manual
 //*****************************************************
@@ -92,11 +95,9 @@ void menuReflow(void);
 
 typedef void (*MenuHandler_t)(void);
 
-MenuHandler_t menuTable[MENU_COUNT] = {
-    menuIdle,
-    menuManual,
-    menuReflow,
-};
+extern MenuHandler_t menuTable[MENU_COUNT];
 extern Menu_t currentMenu;
+
+
 
 #endif
