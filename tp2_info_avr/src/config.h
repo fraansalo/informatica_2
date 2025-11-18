@@ -18,4 +18,7 @@
 #define TIM_MANUAL_HOLD 50
 #define TEMP_HYSTERESIS 5
 
+void system_init(void);
+void system_run(void);
+
 #endif

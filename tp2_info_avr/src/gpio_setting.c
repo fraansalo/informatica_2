@@ -6,13 +6,6 @@
 #include "menus.h"
 #include <avr/io.h>
 
-void system_init(){//inicializo los gpios, timer, interrupciones.
-    buttons_init();
-    outputs_init();
-    timer_init();
-    external_interrupt_init();
-}
-
 void buttons_init(void){
     GpioInitStructure_AVR mi_gpio;
     mi_gpio.modo = avr_GPIO_mode_Input;
@@ -39,6 +32,6 @@ void heater_setter(bool on){
 
 void leds_setter(bool on){
     if(on){
-        set_pin(LED_PORT,HEATER_PIN);
-    }else clear_pin(LED_PORT,HEATER_PIN);
+        set_pin(LED_PORT,LED_PIN);
+    }else clear_pin(LED_PORT,LED_PIN);
 }

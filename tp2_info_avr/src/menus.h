@@ -66,17 +66,6 @@ typedef enum {
 void buttons_set(Button_t btn);
 Button_t buttons_get(void);
 
-
-//*****************************************************
-//definiciones para control temp.
-//*****************************************************
-void control_setTarget(int16_t temp, int16_t h);
-void control_update(int16_t temp_current);
-bool control_isHeating(void);
-void control_reset(void);
-
-
-
 //*****************************************************
 //definiciones de menus
 //*****************************************************
@@ -92,12 +81,11 @@ typedef enum {
 void menuIdle(void);
 void menuManual(void);
 void menuReflow(void);
+void system_reset(void);
 
 typedef void (*MenuHandler_t)(void);
 
 extern MenuHandler_t menuTable[MENU_COUNT];
 extern Menu_t currentMenu;
-
-
 
 #endif

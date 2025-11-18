@@ -4,10 +4,10 @@
 #include "extint_setting.h"
 #include "timer_setting.h"
 
-
 int main(void) {
     system_init();
     while (1) {
-        menuTable[currentMenu]();  // ejecuta el handler del menú actual
+        system_run();
+        //ejecuta los menus, el polling de botones, el adc, y el handler de ticks.
     }
 }

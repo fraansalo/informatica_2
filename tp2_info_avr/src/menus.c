@@ -1,13 +1,10 @@
 #include "menus.h"
+#include "control.h"
 
 Menu_t currentMenu = MENU_IDLE;
 ManualState_t currentManualState = MANUAL_SETPOINT;
 ReflowState_t currentReflowState = REFLOW_PREHEAT;
-
-extern int16_t targetTemp;
-extern int16_t temp_current;
-extern int16_t h;
-extern bool heating;
+static int16_t manualSetpoint = TEMP_COOLED;
 
 void menuIdle(void) {
     Button_t btn = buttons_get();
@@ -42,22 +39,21 @@ ManualHandler_t manualStateTable[MANUAL_STATE_COUNT] = {
 
 ManualState_t stateManualSetpoint(void){
     Button_t btn = buttons_get();
-    if(btn == BTN_UP) targetTemp += 10;
-    if(btn == BTN_DOWN)targetTemp -= 10;
+    if(btn == BTN_UP) manualSetpoint += 10;
+    if(btn == BTN_DOWN)manualSetpoint -= 10;
     if(btn == BTN_ENTER){
+        control_setTarget(manualSetpoint, TEMP_HYSTERESIS);
         return MANUAL_HOLD;
     }
     return MANUAL_SETPOINT;
 }
 
 ManualState_t stateManualHold(void){
-    if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
-    }
     static uint16_t hold_seconds = 0;
-    
-    control_setTarget(targetTemp,TEMP_HYSTERESIS);
-    control_update(temp_current);
+    if(adc_ready()){
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
+    }
+    control_update();
     
     if(timer_seconds()){
         hold_seconds++;
@@ -70,15 +66,15 @@ ManualState_t stateManualHold(void){
 }
 
 ManualState_t stateManualCooling(void){
-    if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
-    }
     static uint16_t manual_cooled_seconds = 0;
-
+    if(adc_ready()){
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
+    }
     control_reset();//setea las temperaturas a default
+
     if(timer_seconds()){
         manual_cooled_seconds++;
-        if(temp_current<=TEMP_COOLED && manual_cooled_seconds >= TIM_COOLED){ 
+        if(control_getCurrentTemp() <=TEMP_COOLED && manual_cooled_seconds >= TIM_COOLED){ 
             manual_cooled_seconds = 0;
             return MANUAL_EXIT;
             }
@@ -96,7 +92,7 @@ void menuReflow(void) {
     if(estado == REFLOW_EXIT){
         system_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo.
     }else{
-        currentManualState = estado;
+        currentReflowState = estado;
     }
 }
 
@@ -110,23 +106,25 @@ ReflowHandler_t reflowStateTable[REFLOW_STATE_COUNT] = {
 };
 
 ReflowState_t stateReflowPreheat(void){
-    if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
+   if(adc_ready()){
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     control_setTarget(TEMP_PREHEAT_TARGET,TEMP_HYSTERESIS);
-    control_update(temp_current);
-    if(temp_current>=TEMP_PREHEAT_TARGET){
+    control_update();
+
+    if(control_getCurrentTemp()>=TEMP_PREHEAT_TARGET){
         return REFLOW_SOAK;
     }return REFLOW_PREHEAT;
 }
 
 ReflowState_t stateReflowSoak(void){
-    if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
-    }
     static uint16_t reflowsoak_seconds = 0;
+    if(adc_ready()){
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
+    }
+    
     control_setTarget(TEMP_SOAK_TARGET,TEMP_HYSTERESIS);
-    control_update(temp_current);
+    control_update();
     
     if(timer_seconds()){
         reflowsoak_seconds++;
@@ -139,13 +137,13 @@ ReflowState_t stateReflowSoak(void){
 }
 
 ReflowState_t stateReflowRamp(void){
-    if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
+   if(adc_ready()){
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     control_setTarget(TEMP_RAMP_TARGET, TEMP_HYSTERESIS);
-    control_update(temp_current);
+    control_update();
 
-    if (temp_current >= TEMP_RAMP_TARGET) {
+    if (control_getCurrentTemp() >= TEMP_RAMP_TARGET) {
         return REFLOW_PEAK;
     }
     return REFLOW_RAMP;
@@ -153,11 +151,11 @@ ReflowState_t stateReflowRamp(void){
 
 ReflowState_t stateReflowPeak(void){
     if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     static uint16_t reflowpeak_seconds = 0;
     control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
-    control_update(temp_current);
+    control_update();
     
     if(timer_seconds()){
         reflowpeak_seconds++;
@@ -171,16 +169,24 @@ ReflowState_t stateReflowPeak(void){
 
 ReflowState_t stateReflowCooling(void){
     if(adc_ready()){
-        temp_current = (int16_t)adc_convertCelsius();
+        control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     static uint16_t reflow_cooling_seconds = 0;
     control_reset();//setea las temperaturas a default
+
     if(timer_seconds()){
         reflow_cooling_seconds++;
-        if(reflow_cooling_seconds>=TIM_COOLED && temp_current <= TEMP_COOLED){
+        if(reflow_cooling_seconds>=TIM_COOLED && control_getCurrentTemp() <= TEMP_COOLED){
             reflow_cooling_seconds = 0;
             return REFLOW_EXIT;
         }
     }
     return REFLOW_COOLING;
+}
+
+void system_reset(void) {
+    currentMenu = MENU_IDLE;
+    currentManualState = MANUAL_SETPOINT;
+    currentReflowState = REFLOW_PREHEAT;
+    control_reset();
 }

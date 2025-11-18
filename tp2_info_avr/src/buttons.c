@@ -1,7 +1,6 @@
 #include "menus.h"
 #include "config.h"
 #include "gpio_setting.h"
-#include "timer_setting.h"
 #include "avr_Gpio.h"
 #include <avr/io.h>
 
@@ -30,9 +29,6 @@ void buttons_polling(void){
     if (!(avr_GPIOD_IN & BTN_ENTER_PIN))current = BTN_ENTER;
     if (!(avr_GPIOD_IN & BTN_SELECT_PIN))current = BTN_SELECT;
     
-    if(timer_tick()){
-        if(debounce_timer > 0) debounce_timer -=10;
-    }
     if(current != boton_previo && debounce_timer == 0){
         boton_previo = current;
         debounce_timer = DEBOUNCE_DELAY_MS;

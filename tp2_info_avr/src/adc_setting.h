@@ -2,9 +2,8 @@
 #define ADC_H
 #include <stdint.h>
 #include <stdbool.h>
-#include "avr_Adc.h"
-#include <avr/interrupt.h>
-#define adc_to_celsius(adc) ((float)(adc)*0.448f)
+
+#define adc_to_celsius(adc) ((float)(adc)*0.488f)
 
 void adc_init(void);
 bool adc_ready(void);
