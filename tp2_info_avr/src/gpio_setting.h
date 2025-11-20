@@ -21,6 +21,14 @@
 #define LED_PORT       avr_GPIOB_OUT
 #define LED_PIN        avr_GPIO_PIN_1
 
+#define LED1_PORT       avr_GPIOB_OUT
+#define LED1_PIN        avr_GPIO_PIN_2
+
+#define LED2_PORT       avr_GPIOB_OUT
+#define LED2_PIN        avr_GPIO_PIN_3
+
+#define LED3_PORT       avr_GPIOB_OUT
+#define LED3_PIN        avr_GPIO_PIN_4
 
 
 void buttons_init(void);
@@ -29,5 +37,9 @@ void outputs_init(void);
 void buttons_polling(void);
 void heater_setter(bool on);
 void leds_setter(bool on);
+void leds1_setter(bool on);
+void leds2_setter(bool on);
+void leds3_setter(bool on);
+
 
 #endif

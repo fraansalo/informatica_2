@@ -18,10 +18,10 @@ void buttons_init(void){
 void outputs_init(void){
     GpioInitStructure_AVR mi_gpio;
     mi_gpio.modo = avr_GPIO_mode_Output;
-    mi_gpio.port = avr_GPIO_C;
-    mi_gpio.pines = avr_GPIO_PIN_3 | avr_GPIO_PIN_4;
+    mi_gpio.port = avr_GPIO_B;
+    mi_gpio.pines = avr_GPIO_PIN_0 | avr_GPIO_PIN_1 | avr_GPIO_PIN_2 | avr_GPIO_PIN_3 | avr_GPIO_PIN_4;
     init_gpio(mi_gpio);
-    clear_pin(HEATER_PORT,HEATER_PIN);
+    clear_pin(HEATER_PORT,HEATER_PIN | LED_PIN | LED1_PIN | LED2_PIN | LED3_PIN);
 };
 
 void heater_setter(bool on){
@@ -34,4 +34,22 @@ void leds_setter(bool on){
     if(on){
         set_pin(LED_PORT,LED_PIN);
     }else clear_pin(LED_PORT,LED_PIN);
+}
+
+void leds1_setter(bool on){
+    if(on){
+        set_pin(LED1_PORT,LED1_PIN);
+    }else clear_pin(LED1_PORT,LED1_PIN);
+}
+
+void leds2_setter(bool on){
+    if(on){
+        set_pin(LED2_PORT,LED2_PIN);
+    }else clear_pin(LED2_PORT,LED2_PIN);
+}
+
+void leds3_setter(bool on){
+    if(on){
+        set_pin(LED3_PORT,LED3_PIN);
+    }else clear_pin(LED3_PORT,LED3_PIN);
 }

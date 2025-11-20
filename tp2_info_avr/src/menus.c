@@ -9,6 +9,7 @@ static int16_t manualSetpoint = TEMP_COOLED;
 void menuIdle(void) {
     Button_t btn = buttons_get();
 
+
     if (btn == BTN_SELECT) {
         currentMenu = (currentMenu + 1) % MENU_COUNT;
     }

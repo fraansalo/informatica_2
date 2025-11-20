@@ -10,6 +10,18 @@ static Button_t boton_previo = BTN_NONE;
 
 void buttons_set(Button_t btn){
     last_button = btn;
+    leds_setter(false);
+    leds1_setter(false);
+    leds2_setter(false);
+    leds3_setter(false);
+
+    switch(btn){
+        case BTN_UP: leds_setter(true); break;
+        case BTN_DOWN: leds1_setter(true); break;
+        case BTN_ENTER: leds2_setter(true); break;
+        case BTN_SELECT: leds3_setter(true); break;
+        default: break;
+    }
 }
 
 Button_t buttons_get(void){
