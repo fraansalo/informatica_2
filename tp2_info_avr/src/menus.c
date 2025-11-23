@@ -1,21 +1,36 @@
 #include "menus.h"
 #include "control.h"
+#include "avr_Uart.h"
 
 Menu_t currentMenu = MENU_IDLE;
 ManualState_t currentManualState = MANUAL_SETPOINT;
 ReflowState_t currentReflowState = REFLOW_PREHEAT;
 static int16_t manualSetpoint = TEMP_COOLED;
 
-void menuIdle(void) {
-    Button_t btn = buttons_get();
+MenuHandler_t menuTable[MENU_COUNT] = {
+    menuIdle,
+    menuManual,
+    menuReflow
+};
 
+
+void menuIdle(void) {
+    static Menu_t lastMenu = MENU_COUNT;
+     if (lastMenu != MENU_IDLE) {
+        uart_puts("MENU: IDLE\r\n");
+        lastMenu = MENU_IDLE;
+    }
+
+    Button_t btn = buttons_get();
+    if(btn == BTN_NONE) return;
 
     if (btn == BTN_SELECT) {
         currentMenu = (currentMenu + 1) % MENU_COUNT;
+        lastMenu = MENU_COUNT;
     }
     if (btn == BTN_ENTER) {
-        if (currentMenu == MENU_MANUAL) currentMenu = MENU_MANUAL;
-        else if (currentMenu == MENU_REFLOW) currentMenu = MENU_REFLOW;
+        if (currentMenu == MENU_IDLE) currentMenu = MENU_MANUAL;
+        return;
     }
 }
 
@@ -23,6 +38,19 @@ void menuIdle(void) {
 //FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO MANUAL
 //*****************************************************
 void menuManual(void) {
+    static Menu_t lastMenu = MENU_COUNT;
+     if (lastMenu != MENU_MANUAL) {
+        uart_puts("MENU: MANUAL\r\n");
+        lastMenu = MENU_MANUAL;
+    }
+
+    Button_t btn = buttons_get();
+    // Si querés que SELECT, estando en manual, vaya a REFLOW:
+    if (btn == BTN_SELECT) {
+        currentMenu = (currentMenu + 1) % MENU_COUNT;
+        lastMenu = MENU_COUNT;
+    }
+
     ManualState_t estado = manualStateTable[currentManualState]();
     if(estado == MANUAL_EXIT){
         system_reset();
@@ -58,7 +86,7 @@ ManualState_t stateManualHold(void){
     
     if(timer_seconds()){
         hold_seconds++;
-        if(hold_seconds>=MANUAL_HOLD){
+        if(hold_seconds>=TIM_MANUAL_HOLD){
             hold_seconds=0;
             return MANUAL_COOLING;
         }
@@ -88,7 +116,19 @@ ManualState_t stateManualCooling(void){
 //*****************************************************
 //FUNCIONES DEDICADAS AL FUNCIONAMIENTO DEL MODO REFLOW
 //*****************************************************
-void menuReflow(void) {     
+void menuReflow(void) {
+    static Menu_t lastMenu = MENU_COUNT;
+     if (lastMenu != MENU_REFLOW) {
+        uart_puts("MENU: REFLOW\r\n");
+        lastMenu = MENU_REFLOW;
+    }    
+
+    Button_t btn = buttons_get();
+    if (btn == BTN_SELECT) {
+        currentMenu = (currentMenu + 1) % MENU_COUNT;
+        lastMenu = MENU_COUNT;
+    }
+
     ReflowState_t estado = reflowStateTable[currentReflowState]();
     if(estado == REFLOW_EXIT){
         system_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo.

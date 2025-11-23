@@ -21,7 +21,7 @@ void outputs_init(void){
     mi_gpio.port = avr_GPIO_B;
     mi_gpio.pines = avr_GPIO_PIN_0 | avr_GPIO_PIN_1 | avr_GPIO_PIN_2 | avr_GPIO_PIN_3 | avr_GPIO_PIN_4;
     init_gpio(mi_gpio);
-    clear_pin(HEATER_PORT,HEATER_PIN | LED_PIN | LED1_PIN | LED2_PIN | LED3_PIN);
+    
 };
 
 void heater_setter(bool on){

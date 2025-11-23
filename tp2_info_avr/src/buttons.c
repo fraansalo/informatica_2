@@ -10,18 +10,18 @@ static Button_t boton_previo = BTN_NONE;
 
 void buttons_set(Button_t btn){
     last_button = btn;
-    leds_setter(false);
-    leds1_setter(false);
-    leds2_setter(false);
-    leds3_setter(false);
+    // leds_setter(false);
+    // leds1_setter(false);
+    // leds2_setter(false);
+    // leds3_setter(false);
 
-    switch(btn){
-        case BTN_UP: leds_setter(true); break;
-        case BTN_DOWN: leds1_setter(true); break;
-        case BTN_ENTER: leds2_setter(true); break;
-        case BTN_SELECT: leds3_setter(true); break;
-        default: break;
-    }
+    // switch(btn){
+    //     case BTN_UP: leds_setter(true); break;
+    //     case BTN_DOWN: leds1_setter(true); break;
+    //     case BTN_ENTER: leds2_setter(true); break;
+    //     case BTN_SELECT: leds3_setter(true); break;
+    //     default: break;
+    // }
 }
 
 Button_t buttons_get(void){
@@ -41,6 +41,9 @@ void buttons_polling(void){
     if (!(avr_GPIOD_IN & BTN_ENTER_PIN))current = BTN_ENTER;
     if (!(avr_GPIOD_IN & BTN_SELECT_PIN))current = BTN_SELECT;
     
+    if(debounce_timer > 0) debounce_timer -= 10;
+
+
     if(current != boton_previo && debounce_timer == 0){
         boton_previo = current;
         debounce_timer = DEBOUNCE_DELAY_MS;

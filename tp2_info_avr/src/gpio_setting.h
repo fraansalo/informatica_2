@@ -41,5 +41,4 @@ void leds1_setter(bool on);
 void leds2_setter(bool on);
 void leds3_setter(bool on);
 
-
 #endif

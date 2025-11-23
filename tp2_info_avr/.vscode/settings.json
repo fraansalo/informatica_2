@@ -73,6 +73,11 @@
   "files.associations": {
     "config.h": "c",
     "stdbool.h": "c",
-    "avr_adc.h": "c"
+    "avr_adc.h": "c",
+    "avr_uart.h": "c",
+    "extint_setting.h": "c",
+    "menus.h": "c",
+    "timer_setting.h": "c",
+    "gpio_setting.h": "c"
   }
 }

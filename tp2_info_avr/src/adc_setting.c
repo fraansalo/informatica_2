@@ -1,6 +1,7 @@
 #include "adc_setting.h"
 #include "avr_Adc.h"
 #include <avr/interrupt.h>
+#include <gpio_setting.h>
 
 volatile static uint16_t adc_value = 0;
 volatile static bool adc_flag = false;
@@ -9,6 +10,7 @@ volatile static bool adc_flag = false;
 static void mi_adc_handler(void){
     adc_value = leer_ADC(avr_ADC_canal0);
     adc_flag = true;
+    ADCSRA |= (1 << ADSC);
 }
 
 
@@ -22,6 +24,7 @@ void adc_init(){
     mi_adc.resolution = avr_ADC_RES_10Bit;
     mi_adc.avr_adc_handler = mi_adc_handler;
     init_adc(mi_adc);
+    
 }
 
 bool adc_ready(){

@@ -70,8 +70,7 @@ Button_t buttons_get(void);
 //definiciones de menus
 //*****************************************************
 typedef enum {
-    MENU_NONE,
-    MENU_IDLE,
+    MENU_IDLE = 0,
     MENU_MANUAL,
     MENU_REFLOW,
     MENU_COUNT
