@@ -1,6 +1,7 @@
 #include "menus.h"
 #include "control.h"
 #include "avr_Uart.h"
+#include "config.h"
 
 Menu_t currentMenu = MENU_IDLE;
 ManualState_t currentManualState = MANUAL_SETPOINT;
@@ -29,7 +30,14 @@ void menuIdle(void) {
         lastMenu = MENU_COUNT;
     }
     if (btn == BTN_ENTER) {
-        if (currentMenu == MENU_IDLE) currentMenu = MENU_MANUAL;
+        int16_t temp = control_getCurrentTemp();
+        int16_t sp   = control_getTargetTemp();
+
+        uart_puts("Info:\r\n");
+        uart_puts("  T_amb = "); uart_putint(temp); uart_puts(" C\r\n");
+        uart_puts("  SP     = "); uart_putint(sp);   uart_puts(" C\r\n");
+        uart_puts("  Hyst   = "); uart_putint(TEMP_HYSTERESIS); uart_puts(" C\r\n");
+        return;
         return;
     }
 }

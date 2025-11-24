@@ -17,36 +17,29 @@ void system_init(void){
     uart_init(UART_BAUD_SELECT(9600, F_CPU));
 
 }
-// static void uart_putint(int16_t val){
-//     char buf[8];
-//     int8_t i = 0;
 
-//     if (val < 0){
-//         uart_putc('-');
-//         val = -val;
-//     }
-//     do {
-//         buf[i++] = (val % 10) + '0';
-//         val /= 10;
-//     } while(val && i < 7);
+//funcion para imprimir variables en UART.
+void uart_putint(int16_t val){
+    char buffer[7]; // suficiente para "-32768"
+    itoa(val, buffer, 10);
+    uart_puts(buffer);
+}
 
-//     while(i--){
-//         uart_putc(buf[i]);
-//     }
-// }
 
 void system_run(void){
     if (timer_tick()) {
         // debounce y captura de botones
         buttons_polling();
     }
+    //deshabilitado para testeo de botones y menu
     // if (adc_ready()) {
     //     int16_t tempC = (int16_t)adc_convertCelsius();
     //     control_setCurrentTemp(tempC);
     // }control_update();
     
     menuTable[currentMenu]();
-
+    
+    //formato UART para llevar control de los valores de temp.
     // if (timer_seconds()) {
     //     uart_puts("T=");
     //     uart_putint(control_getCurrentTemp());   

@@ -14,4 +14,6 @@ void control_update();
 bool control_isHeating(void);
 void control_reset(void);
 
+static void uart_putint(int16_t val);
+
 #endif

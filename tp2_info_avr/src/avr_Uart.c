@@ -488,6 +488,12 @@ void uart_puts(const char *s )
 
 }/* uart_puts */
 
+void uart_putint(int16_t val){
+    char buffer[7]; // suficiente para "-32768"
+    itoa(val, buffer, 10);
+    uart_puts(buffer);
+}
+
 
 /*************************************************************************
 Function: uart_puts_p()

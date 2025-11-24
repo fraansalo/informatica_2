@@ -210,7 +210,7 @@ typedef struct
 
 // Funcion de inicializacion
 void init_uart_avr(UartInitStructure);
-
+void uart_putint(int16_t val);
 
 
 #endif /* AVR_UART_H_ */
