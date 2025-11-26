@@ -1,35 +1,48 @@
-# Consigna:
 
-Este trabajo tiene como consigna diseñar un sistema planteado desde una máquina de estados (FSM).
+# Sistema de soldado SMD:
 
-El mismo será diagramado por entregas con fechas sugeridas, con el fin de concluirlo durante la cursada.
-
-## Proyecto seleccionado:
-
-### *Sistema de soldado SMD:*
+## Descripción:
 
 Esta idea se basa en el concepto de simular una placa de   calentamiento para soldar componentes electrónicos SMD.
 
-El control sigue un perfil o curva de reflow compuesto por distintas fases de temperatura y tiempo, con el objetivo de asegurar la soldadura correcta y evitar daños a los componentes. Estas curvas generalmente cuentan con distintas fases:
+El control sigue un perfil o curva de reflow compuesto por distintas fases de temperatura y tiempo, con el objetivo de asegurar la soldadura correcta y evitar daños a los componentes.
 
-#### Precalentamiento o Preheat:
+### Referencias a usar:
+
+    Canal: GreatScott!
+**https://www.youtube.com/watch?v=QarizoUnRfk&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=23**
+
+[![The Best way to Solder? Hot Plate to the rescue!](img.youtube.com[QarizoUnRfk])](https://www.youtube.com/watch?v=QarizoUnRfk&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=23)
+
+
+
+
+    Canal: Electronoobs
+ **https://www.youtube.com/watch?v=C7blZigaaaA&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=20&t=589s**
+
+---
+
+## Etapas definidas del proceso:
+
+#### `Precalentamiento o Preheat`:
 Se encarga de volatilizar el solvente de bajo punto de fusión en la pasta, los cuales incluyen resina, potenciador de viscosidad entre otros.
 
-#### Soaking o remojo:
+#### `Soaking o remojo`:
 Esta fase tiene como objetivo lograr un temperatura uniforme sobre el PCB lo cual ayuda a reducir el impacto de la tensión térmica en la zona de reflujo y limita el levantamiento de grandes componentes. Además en esta etapa el fundente en la pasta comienza a reaccionar de manera activa garantizando que la soldadura fundida humedezca bien la superficie de soldadura.
 
-#### Rampa de pico y Reflow (o reflujo):
+#### `Rampa de pico y Reflow (o reflujo)`:
 
-En esta etapa se produce la fusión completa y la reacción de humectación para que la capa de compuesto intermetálico comience a formarse. El tiempo en alta temperatura (aprox llegando a los 217°C, sabiendo que los PCBs de aluminio soportan estables +240°C) debe ser lo mas corto posible siendo un ideal entre 30 y 60 segundos.
+En esta etapa se produce la fusión completa y la reacción de humectación para que la capa de compuesto intermetálico comience a formarse. El tiempo en alta temperatura (aprox llegando a los 217°C, sabiendo que los PCBs de aluminio soportan estables +240°C).
+Debe ser lo mas corto posible siendo un ideal entre 30 y 60 segundos.
 
-#### Cooling:
+#### `Cooling`:
 Un buen proceso de enfriamiento es fundamental para el resultado final de la soldadura. Es importante que la curva de de enfríado no sea pronunciada, ni muy rápida ni lenta. Un plazo de 30 a 50 segundos suele ser lo ideal. 
 
 ---
 
-En las siguientes imagenes podemos ver algunos ejemplos de curvas de reflow que se utilizarán como guía para modelar la idea.
+## Ilustraciones de referencia.
 
----
+    Se observa el paso a paso de la temperatura entre las etapas del soldado recomendado por marcas del mercado de estaño en pasta.
 
 >![Curva_reflow_1](https://github.com/fraansalo/informatica_2/blob/main/images/800px-RSS_Components_of_a_Profile1.svg.png?raw=true)
 >![Curva_reflow_2](https://github.com/fraansalo/informatica_2/blob/main/images/kester1.jpg?raw=true)
@@ -37,20 +50,32 @@ En las siguientes imagenes podemos ver algunos ejemplos de curvas de reflow que 
 ---
 
 
-## Funcionamiento:
+## Funcionamiento Básico:
 
 Para establecer una idea funcional, y versatil se decidió que dentro del funcionamiento base, que sería seguir una curva de reflow genérica que funcione para la mayoría de pastas para soldar, se agregara un modo adicional:
 
-> **Manual**: Se establecerá un SetPoint por el usuario, el cual indicará una temperatura a la que se deberá alcanzar. Se mantendrá en esa temperatura por un tiempo determinado y luego se procede a enfríar. El modo de setear este SetPoint será por medio de botones fisicos que aumentarán o bajarán la temperatura con pasos de 10°C.
+> **`Manual`**: Se establecerá un SetPoint por el usuario, el cual indicará una temperatura a la que se deberá alcanzar. Se mantendrá en esa temperatura por un tiempo determinado y luego se procede a enfríar. El modo de setear este SetPoint será por medio de los botones fisicos `Up` y `down`que aumentarán o bajarán la temperatura con pasos de **`10°C`**.
 >
-> **Automático**: En este modo la temperatura seguirá el circulo de la curva de reflujo o reflow para el uso específico de pastas de soldar. *(Se contemplará durante el desenlace del proyecto la posibilidad de modificar activamente parámetros de esa curva por el usuario.)*
+> **`Automático`**: En este modo la temperatura seguirá el ciclo de la curva de reflujo o reflow para el uso específico de pastas de soldar. *(Se contemplará durante el desenlace del proyecto la posibilidad de modificar activamente parámetros de esa curva por el usuario.)*
 
-Cabe aclarar que estos modos se seleccionarán también con el uso de botones físicos ***Enter*** y ***Select***.
+### Botones: 
+
+Nuestra máquina de estados incluye el ingreso y selección del modo por medio del usuario usando botones definidos:
+
+- **`Enter`** Ingreso a la función definida del modo correspondiente.
+
+- **`Select`** Selección del modo de funcionamiento. (Manual ; Reflow)
+
+- **`DOWN`** Útil en el modo Manual. Disminuye el valor del setpoint en -10°C.
+
+- **`UP`** Útil en el modo Manual. Aumenta el valor del setpoint en +10°C.
+
+---
+## Diagramas de estado:
 
 Para poder visualizar de manera más clara y técnica del funcionamiento, se esbozó un diagrama de máquinas de estado preliminar como boceto:
 [**Boceto Maquina de estados.pdf**](https://github.com/fraansalo/informatica_2/blob/5d98e0c3dc995769c6904ed7fd2d0cfd7a1fc2f3/tp2/state%20Machine%20TP2_250828_113235_250828_114103.pdf)
 
----
 
 En ese boceto se podrá ver de manera general como es la idea del funcionamiento del proyecto en sí con sus distintas fases. Se irá evaluando los nombres de las variables definitivos a medida que el código se valla desarrollando. 
 Tras retoque de detalles este sería el resultado final del diagrama de la máquina de estados:
