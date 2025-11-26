@@ -11,14 +11,32 @@ El control sigue un perfil o curva de reflow compuesto por distintas fases de te
 
     Canal: GreatScott!
 
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=QarizoUnRfk" target="_blank">
+    <img src="https://img.youtube.com/vi/QarizoUnRfk/hqdefault.jpg" 
+         alt="The Best way to Solder? Hot Plate to the rescue!"
+         style="width:70%; border-radius:10px; border:1px solid #555;">
+  </a>
+  <br><br>
+  <b style="font-size:20px;">The Best way to Solder? Hot Plate to the rescue!</b>
+  <br>
+</div>
 
-[![The Best way to Solder? Hot Plate to the rescue!](https://img.youtube.com/vi/QarizoUnRfk/hqdefault.jpg)](https://www.youtube.com/watch?v=QarizoUnRfk&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=23)
 
-
-
+---
 
     Canal: Electronoobs
- [![The Best way to Solder? Hot Plate to the rescue!](https://img.youtube.com/vi/C7blZigaaaA/hqdefault.jpg)](https://www.youtube.com/watch?v=C7blZigaaaA&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=20&t=589s)
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=QarizoUnRfk" target="_blank">
+    <img src="https://img.youtube.com/vi/C7blZigaaaA/hqdefault.jpg" 
+         alt="The Best way to Solder? Hot Plate to the rescue!"
+         style="width:70%; border-radius:10px; border:1px solid #555;">
+  </a>
+  <br><br>
+  <b style="font-size:20px;">Homemade Reflow Hot Plate for SMD Soldering</b>
+  <br>
+</div>
 
 
 ---
