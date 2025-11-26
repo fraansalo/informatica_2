@@ -10,15 +10,16 @@ El control sigue un perfil o curva de reflow compuesto por distintas fases de te
 ### Referencias a usar:
 
     Canal: GreatScott!
-**https://www.youtube.com/watch?v=QarizoUnRfk&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=23**
 
-[![The Best way to Solder? Hot Plate to the rescue!](img.youtube.com[QarizoUnRfk])](https://www.youtube.com/watch?v=QarizoUnRfk&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=23)
+
+[![The Best way to Solder? Hot Plate to the rescue!](https://img.youtube.com/vi/QarizoUnRfk/hqdefault.jpg)](https://www.youtube.com/watch?v=QarizoUnRfk&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=23)
 
 
 
 
     Canal: Electronoobs
- **https://www.youtube.com/watch?v=C7blZigaaaA&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=20&t=589s**
+ [![The Best way to Solder? Hot Plate to the rescue!](https://img.youtube.com/vi/C7blZigaaaA/hqdefault.jpg)](https://www.youtube.com/watch?v=C7blZigaaaA&list=PLOywETDg_2B7wkD-lNAfwRhk_Mtq-DHUf&index=20&t=589s)
+
 
 ---
 
