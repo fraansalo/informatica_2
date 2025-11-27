@@ -19,11 +19,7 @@ void system_init(void){
 }
 
 //funcion para imprimir variables en UART.
-void uart_putint(int16_t val){
-    char buffer[7]; // suficiente para "-32768"
-    itoa(val, buffer, 10);
-    uart_puts(buffer);
-}
+
 
 
 void system_run(void){
@@ -38,17 +34,4 @@ void system_run(void){
     // }control_update();
     
     menuTable[currentMenu]();
-    
-    //formato UART para llevar control de los valores de temp.
-    // if (timer_seconds()) {
-    //     uart_puts("T=");
-    //     uart_putint(control_getCurrentTemp());   
-    //     uart_puts("  SP=");
-    //     uart_putint(control_getTargetTemp());
-    //     uart_puts("  H=");
-    //     uart_putint(control_isHeating() ? 1 : 0);
-    //     uart_puts("  M=");
-    //     uart_putint((int16_t)currentMenu);
-    //     uart_puts("\r\n");
-    // }
 }

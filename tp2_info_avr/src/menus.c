@@ -8,6 +8,9 @@ ManualState_t currentManualState = MANUAL_SETPOINT;
 ReflowState_t currentReflowState = REFLOW_PREHEAT;
 static int16_t manualSetpoint = TEMP_COOLED;
 
+static bool manualRunning = false;
+static bool reflowRunning = false;
+
 MenuHandler_t menuTable[MENU_COUNT] = {
     menuIdle,
     menuManual,
@@ -53,16 +56,42 @@ void menuManual(void) {
     }
 
     Button_t btn = buttons_get();
-    // Si querés que SELECT, estando en manual, vaya a REFLOW:
+  
+    // if (!manualRunning){
+    //     if(btn == BTN_SELECT){
+    //     currentMenu = (currentMenu + 1) % MENU_COUNT;
+    //     lastMenu = MENU_COUNT;
+    //     return;
+    //     }
+    //     if (currentManualState == MANUAL_SETPOINT) {
+    //         ManualState_t next = stateManualSetpoint();
+    //         currentManualState = next;
+    //     } else {
+    //         currentManualState = MANUAL_SETPOINT;
+    //     }
+    //     return;
+    // }
     if (btn == BTN_SELECT) {
         currentMenu = (currentMenu + 1) % MENU_COUNT;
         lastMenu = MENU_COUNT;
+        return;
+    }
+    //reinyeccion de boton.
+    if (btn != BTN_NONE) {
+        buttons_set(btn);
     }
 
     ManualState_t estado = manualStateTable[currentManualState]();
     if(estado == MANUAL_EXIT){
+        uart_puts("MANUAL: EXIT -> RESET\r\n");
         system_reset();
+        lastMenu = MENU_COUNT;
     }else{
+        // if(estado != currentManualState){
+        //     uart_puts("MANUAL STATE -> ");
+        //     uart_putint((int16_t)estado);
+        //     uart_puts("\r\n");
+        // }
         currentManualState = estado;
     }
 }
@@ -75,26 +104,73 @@ ManualHandler_t manualStateTable[MANUAL_STATE_COUNT] = {
 };
 
 ManualState_t stateManualSetpoint(void){
+    static bool printed = false;
     Button_t btn = buttons_get();
-    if(btn == BTN_UP) manualSetpoint += 10;
-    if(btn == BTN_DOWN)manualSetpoint -= 10;
+     if (!printed) {
+        uart_puts("MANUAL STATE: SETPOINT\r\n");
+        printed = true;
+    }
+
+    if(btn == BTN_UP){
+        manualSetpoint += 10;
+        uart_puts("SetPoint = "); 
+        uart_putint(manualSetpoint); 
+        uart_puts(" C\r\n");
+    }
+    if(btn == BTN_DOWN){
+        manualSetpoint -= 10;
+        uart_puts("SetPoint = "); 
+        uart_putint(manualSetpoint); 
+        uart_puts(" C\r\n");
+    }
     if(btn == BTN_ENTER){
         control_setTarget(manualSetpoint, TEMP_HYSTERESIS);
+        // manualRunning = true;
+        uart_puts("Manual: starting (HOLD)"); 
+        printed = false;
         return MANUAL_HOLD;
     }
     return MANUAL_SETPOINT;
 }
 
 ManualState_t stateManualHold(void){
+    static bool printed = false;
     static uint16_t hold_seconds = 0;
+    static bool reached_setpoint = false;
+
+     if (!printed) {
+        uart_puts("MANUAL STATE: HOLD\r\n");
+        printed = true;
+    }
+    
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     control_update();
+
+    if(!reached_setpoint){
+        if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS)){
+            reached_setpoint = true;
+            hold_seconds = 0;
+            uart_puts("HOLD: reached SP, starting timer\r\n");
+        }
+        if(timer_seconds()){
+            uart_puts("Temperatura =");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C\r\n");
+        }
+        return MANUAL_HOLD;
+    }
     
     if(timer_seconds()){
         hold_seconds++;
+        uart_puts("TIM HOLD =");
+        uart_putint(hold_seconds);
+        uart_puts("Temperatura =");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C\r\n");
         if(hold_seconds>=TIM_MANUAL_HOLD){
+            printed = false;
             hold_seconds=0;
             return MANUAL_COOLING;
         }
@@ -103,19 +179,34 @@ ManualState_t stateManualHold(void){
 }
 
 ManualState_t stateManualCooling(void){
+    static bool printed = false;
+     if (!printed) {
+        uart_puts("MANUAL STATE: COOLING\r\n");
+        printed = true;
+    }
+
     static uint16_t manual_cooled_seconds = 0;
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     control_reset();//setea las temperaturas a default
 
+
     if(timer_seconds()){
         manual_cooled_seconds++;
+        uart_puts("TIM COOLING t=");
+        uart_putint(manual_cooled_seconds);
+        uart_puts("Temperatura =");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C\r\n");
+
         if(control_getCurrentTemp() <=TEMP_COOLED && manual_cooled_seconds >= TIM_COOLED){ 
             manual_cooled_seconds = 0;
+            printed = false;
             return MANUAL_EXIT;
             }
         }
+
     return MANUAL_COOLING;
 }
 
@@ -237,5 +328,7 @@ void system_reset(void) {
     currentMenu = MENU_IDLE;
     currentManualState = MANUAL_SETPOINT;
     currentReflowState = REFLOW_PREHEAT;
+    manualRunning = false;
+    reflowRunning = false;
     control_reset();
 }

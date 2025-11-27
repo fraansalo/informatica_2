@@ -12,10 +12,10 @@
 #define TIM_PEAK_TARGET 35
 
 #define TEMP_COOLED 24
-#define TIM_COOLED 50
+#define TIM_COOLED 10 //50
 
 #define DEBOUNCE_DELAY_MS 30
-#define TIM_MANUAL_HOLD 50
+#define TIM_MANUAL_HOLD 10 //50
 #define TEMP_HYSTERESIS 5
 
 void system_init(void);

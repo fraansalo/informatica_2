@@ -13,8 +13,7 @@ static bool heating = false;
 void control_reset(void){
     targetTemp = TEMP_COOLED;
     h = TEMP_HYSTERESIS;
-    heating = false;
-    temp_current = TEMP_COOLED; 
+    heating = false; 
     heater_setter(false);
 }
 
