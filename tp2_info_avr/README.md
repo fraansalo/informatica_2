@@ -1,5 +1,13 @@
 
-# Sistema de soldado SMD:
+
+<h1 align="center">⚙️ Horno SMD – Curva Reflow Controlada</h1>
+<h3 align="center">ATmega328P • Proteus Simulation</h3>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Microcontrolador-ATmega328P-blue?style=flat-square">
+  <img src="https://img.shields.io/badge/Simulación-Proteus 8-green?style=flat-square">
+  <img src="https://img.shields.io/badge/Estado-En proceso-success?style=flat-square">
+</p>
 
 
 ## 📌 Descripción:
@@ -67,6 +75,7 @@ Para establecer una idea funcional, y versatil se decidió que dentro del funcio
 ```
                                         SETPOINT → HOLD → COOLING → EXIT
 ```
+
 **`2️⃣ Modo Reflow (Curva)`**: En este modo la temperatura seguirá el ciclo de la curva de reflujo o reflow para el uso específico de pastas de soldar.
 
 ```c
