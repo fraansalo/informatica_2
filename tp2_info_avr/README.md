@@ -1,45 +1,23 @@
 
 # Sistema de soldado SMD:
 
-## Descripción:
 
-Esta idea se basa en el concepto de simular una placa de   calentamiento para soldar componentes electrónicos SMD.
+## 📌 Descripción:
+
+Esta idea se basa en el concepto de simular una placa de calentamiento para soldar componentes electrónicos SMD.
 
 El control sigue un perfil o curva de reflow compuesto por distintas fases de temperatura y tiempo, con el objetivo de asegurar la soldadura correcta y evitar daños a los componentes.
 
-### Referencias a usar:
-
-    Canal: GreatScott!
-
-<div align="center">
-  <a href="https://www.youtube.com/watch?v=QarizoUnRfk" target="_blank">
-    <img src="https://img.youtube.com/vi/QarizoUnRfk/hqdefault.jpg" 
-         alt="The Best way to Solder? Hot Plate to the rescue!"
-         style="width:70%; border-radius:10px; border:1px solid #555;">
-  </a>
-  <br><br>
-  <b style="font-size:20px;">The Best way to Solder? Hot Plate to the rescue!</b>
-  <br>
-</div>
-
-
----
-
-    Canal: Electronoobs
-
-<div align="center">
-  <a href="https://www.youtube.com/watch?v=QarizoUnRfk" target="_blank">
-    <img src="https://img.youtube.com/vi/C7blZigaaaA/hqdefault.jpg" 
-         alt="The Best way to Solder? Hot Plate to the rescue!"
-         style="width:70%; border-radius:10px; border:1px solid #555;">
-  </a>
-  <br><br>
-  <b style="font-size:20px;">Homemade Reflow Hot Plate for SMD Soldering</b>
-  <br>
-</div>
-
-
----
+###  Características principales:
+```c
+🧩 Máquinas de estado independientes para Manual y Reflow.
+🌡️ Lectura de temperatura(LM35).
+🔥 Control ON/OFF con histeresis (relay).
+⏱️ Implementación de timers por software vía interrupción.
+🎛️ Menú controlado por botones fisicos.
+🖥️ Telemetría completa vía UART (tiempos, temperatura).
+🧪 Simulación completa en Proteus.
+```
 
 ## Etapas definidas del proceso:
 
@@ -73,9 +51,38 @@ Un buen proceso de enfriamiento es fundamental para el resultado final de la sol
 
 Para establecer una idea funcional, y versatil se decidió que dentro del funcionamiento base, que sería seguir una curva de reflow genérica que funcione para la mayoría de pastas para soldar, se agregara un modo adicional:
 
-> **`Manual`**: Se establecerá un SetPoint por el usuario, el cual indicará una temperatura a la que se deberá alcanzar. Se mantendrá en esa temperatura por un tiempo determinado y luego se procede a enfríar. El modo de setear este SetPoint será por medio de los botones fisicos `Up` y `down`que aumentarán o bajarán la temperatura con pasos de **`10°C`**.
->
-> **`Automático`**: En este modo la temperatura seguirá el ciclo de la curva de reflujo o reflow para el uso específico de pastas de soldar. *(Se contemplará durante el desenlace del proyecto la posibilidad de modificar activamente parámetros de esa curva por el usuario.)*
+**`1️⃣ Modo Manual`**: Se establecerá un SetPoint por el usuario, el cual indicará una temperatura a la que se deberá alcanzar. Se mantendrá en esa temperatura por un tiempo determinado y luego se procede a enfríar. El modo de setear este SetPoint será por medio de los botones fisicos `Up` y `down`que aumentarán o bajarán la temperatura con pasos de **`10°C`**.
+
+```c
+1. Usuario selecciona objetivo de temperatura (±10 °C por pulsación).
+2. Presiona ENTER para comenzar.
+3. El sistema calienta hasta alcanzar el setpoint.
+4. Mantiene la temperatura por TIM_MANUAL_HOLD segundos.
+5. Enfría hasta TEMP_COOLED.
+6. Finaliza y vuelve a MENU_IDLE
+```
+
+<div align="center"><b>Máquina de estados – Manual</b></div>
+
+```
+                                        SETPOINT → HOLD → COOLING → EXIT
+```
+**`2️⃣ Modo Reflow (Curva)`**: En este modo la temperatura seguirá el ciclo de la curva de reflujo o reflow para el uso específico de pastas de soldar.
+
+```c
+//Etapas controladas:
+
+1. PREHEAT → Calentamiento suave hasta ~150 °C
+2. SOAK → Estabilización térmica (90 s)
+3. RAMP → PEAK → Subida hasta ~220–230 °C y permanencia controlada
+4. COOLING → Enfriado moderado hasta temperatura segura
+```
+
+<div align="center"><b>Máquina de estados – Reflow</b></div>
+
+```
+                                    PREHEAT → SOAK → RAMP → PEAK → COOLING → EXIT
+```
 
 ### Botones: 
 
@@ -102,7 +109,38 @@ Tras retoque de detalles este sería el resultado final del diagrama de la máqu
 >![diagrama_maquinaestados](https://github.com/fraansalo/informatica_2/blob/b4c3982caba6b040ab1e8da4ddf514fa8bb27a62/images/diagrama_terminado.png)
 
 
+### Material Consultado:
 
+    Canal: GreatScott!
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=QarizoUnRfk" target="_blank">
+    <img src="https://img.youtube.com/vi/QarizoUnRfk/hqdefault.jpg" 
+         alt="The Best way to Solder? Hot Plate to the rescue!"
+         style="width:70%; border-radius:10px; border:1px solid #555;">
+  </a>
+  <br><br>
+  <b style="font-size:20px;">The Best way to Solder? Hot Plate to the rescue!</b>
+  <br>
+</div>
+
+
+---
+
+    Canal: Electronoobs
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=QarizoUnRfk" target="_blank">
+    <img src="https://img.youtube.com/vi/C7blZigaaaA/hqdefault.jpg" 
+         alt="The Best way to Solder? Hot Plate to the rescue!"
+         style="width:70%; border-radius:10px; border:1px solid #555;">
+  </a>
+  <br><br>
+  <b style="font-size:20px;">Homemade Reflow Hot Plate for SMD Soldering</b>
+  <br>
+</div>
+
+---
 
 
 
