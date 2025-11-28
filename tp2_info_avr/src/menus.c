@@ -163,15 +163,24 @@ ManualState_t stateManualHold(void){
     }
     
     if(timer_seconds()){
-        hold_seconds++;
-        uart_puts("TIM HOLD =");
-        uart_putint(hold_seconds);
-        uart_puts("Temperatura =");
-        uart_putint(control_getCurrentTemp());
-        uart_puts(" C\r\n");
+        if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
+            hold_seconds++;
+            uart_puts("TIM HOLD =");
+            uart_putint(hold_seconds);
+            uart_puts("Temp =");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C\r\n");
+        }else{
+            uart_puts("HOLD: out of range, no time counted. T=");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C  SetPoint=");
+            uart_putint(control_getTargetTemp());
+            uart_puts(" C\r\n");
+        }
         if(hold_seconds>=TIM_MANUAL_HOLD){
             printed = false;
             hold_seconds=0;
+            reached_setpoint = false;
             return MANUAL_COOLING;
         }
     }
@@ -180,23 +189,24 @@ ManualState_t stateManualHold(void){
 
 ManualState_t stateManualCooling(void){
     static bool printed = false;
-     if (!printed) {
+    static uint16_t manual_cooled_seconds = 0;
+     
+    if (!printed) {
         uart_puts("MANUAL STATE: COOLING\r\n");
         printed = true;
     }
 
-    static uint16_t manual_cooled_seconds = 0;
+    
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
     control_reset();//setea las temperaturas a default
 
-
     if(timer_seconds()){
         manual_cooled_seconds++;
         uart_puts("TIM COOLING t=");
         uart_putint(manual_cooled_seconds);
-        uart_puts("Temperatura =");
+        uart_puts("Temp =");
         uart_putint(control_getCurrentTemp());
         uart_puts(" C\r\n");
 
@@ -223,14 +233,26 @@ void menuReflow(void) {
     }    
 
     Button_t btn = buttons_get();
-    if (btn == BTN_SELECT) {
-        currentMenu = (currentMenu + 1) % MENU_COUNT;
-        lastMenu = MENU_COUNT;
+   
+    if (!reflowRunning) {
+        if (btn == BTN_SELECT) {
+            currentMenu = (currentMenu + 1) % MENU_COUNT;
+            lastMenu = MENU_COUNT;
+        }
+
+        if (btn == BTN_ENTER) {
+            uart_puts("REFLOW: START\r\n");
+            currentReflowState = REFLOW_PREHEAT;
+            reflowRunning = true;
+        }
+        return;
     }
 
     ReflowState_t estado = reflowStateTable[currentReflowState]();
     if(estado == REFLOW_EXIT){
-        system_reset();                       //lo hacemos para asegurar por si hubo alguna particularidad en el reseteo del modo.
+        uart_puts("REFLOW: EXIT -> RESET\r\n");
+        system_reset();
+        lastMenu = MENU_COUNT;                       
     }else{
         currentReflowState = estado;
     }
@@ -246,78 +268,197 @@ ReflowHandler_t reflowStateTable[REFLOW_STATE_COUNT] = {
 };
 
 ReflowState_t stateReflowPreheat(void){
-   if(adc_ready()){
+    static bool printed = false;
+    if (!printed) {
+        uart_puts("REFLOW STATE: PREHEAT\r\n");
+        control_setTarget(TEMP_PREHEAT_TARGET, TEMP_HYSTERESIS);
+        printed = true;
+    }
+
+    if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
-    control_setTarget(TEMP_PREHEAT_TARGET,TEMP_HYSTERESIS);
     control_update();
 
-    if(control_getCurrentTemp()>=TEMP_PREHEAT_TARGET){
+     if (timer_seconds()) {
+        uart_puts("[PREHEAT] T=");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C  SetPoint=");
+        uart_putint(control_getTargetTemp());
+        uart_puts(" C\r\n");
+    }
+
+    if(control_getCurrentTemp() >=(TEMP_PREHEAT_TARGET-TEMP_HYSTERESIS)){
+        printed = false;
         return REFLOW_SOAK;
     }return REFLOW_PREHEAT;
 }
 
 ReflowState_t stateReflowSoak(void){
     static uint16_t reflowsoak_seconds = 0;
+    static bool printed = false;
+    static bool soak_started = false;
+
+    if (!printed) {
+        uart_puts("REFLOW STATE: SOAK\r\n");
+        control_setTarget(TEMP_SOAK_TARGET, TEMP_HYSTERESIS);
+        printed = true;
+        reflowsoak_seconds = 0;
+        soak_started = false;
+    }
+
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
-    
-    control_setTarget(TEMP_SOAK_TARGET,TEMP_HYSTERESIS);
     control_update();
     
-    if(timer_seconds()){
-        reflowsoak_seconds++;
-        if(reflowsoak_seconds > TIM_SOAK_TARGET){
+    if (!soak_started) {
+        if (control_getCurrentTemp() >= (TEMP_SOAK_TARGET - TEMP_HYSTERESIS)) {
+            soak_started = true;
             reflowsoak_seconds = 0;
+            uart_puts("SOAK: reached SP, starting timer\r\n");
+        }
+        if (timer_seconds()) {
+        uart_puts("[SOAK] T=");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C  SetPoint=");
+        uart_putint(control_getTargetTemp());
+        uart_puts(" C\r\n");
+        }
+        return REFLOW_SOAK;
+    }
+
+    if(timer_seconds()){
+        if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
+            reflowsoak_seconds++;
+            uart_puts("TIM SOAK =");
+            uart_putint(reflowsoak_seconds);
+            uart_puts("s Temp =");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C\r\n");
+        }else{
+            uart_puts("HOLD: out of range, no time counted. T=");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C  SetPoint=");
+            uart_putint(control_getTargetTemp());
+            uart_puts(" C\r\n");
+        }
+        if (reflowsoak_seconds >= TIM_SOAK_TARGET) {
+            printed = false;
             return REFLOW_RAMP;
         }
-    }
-    return REFLOW_SOAK;
+    }return REFLOW_SOAK;
 }
 
 ReflowState_t stateReflowRamp(void){
+    static bool printed = false;
+    if (!printed) {
+        uart_puts("REFLOW STATE: RAMP\r\n");
+        control_setTarget(TEMP_RAMP_TARGET, TEMP_HYSTERESIS);
+        printed = true;
+    }
    if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
-    control_setTarget(TEMP_RAMP_TARGET, TEMP_HYSTERESIS);
     control_update();
-
-    if (control_getCurrentTemp() >= TEMP_RAMP_TARGET) {
+     if (timer_seconds()) {
+        uart_puts("[RAMP] T=");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C  SetPoint=");
+        uart_putint(control_getTargetTemp());
+        uart_puts(" C\r\n");
+    }
+    if (control_getCurrentTemp() >= (TEMP_RAMP_TARGET-TEMP_HYSTERESIS)) {
+        printed = false;
         return REFLOW_PEAK;
     }
     return REFLOW_RAMP;
 }
 
 ReflowState_t stateReflowPeak(void){
+    static bool printed = false;
+    static bool peak_started = false;
+    static uint16_t reflowpeak_seconds = 0;
+
+    if (!printed) {
+        uart_puts("REFLOW STATE: PEAK\r\n");
+        control_setTarget(TEMP_PEAK_TARGET, TEMP_HYSTERESIS);
+        peak_started = false;
+        reflowpeak_seconds = 0;
+        printed = true;
+    }
+    
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
-    static uint16_t reflowpeak_seconds = 0;
-    control_setTarget(TEMP_PEAK_TARGET,TEMP_HYSTERESIS);
     control_update();
-    
-    if(timer_seconds()){
-        reflowpeak_seconds++;
-        if(reflowpeak_seconds >= TIM_PEAK_TARGET){
+    if (!peak_started) {
+        if (control_getCurrentTemp() >= (TEMP_PEAK_TARGET - TEMP_HYSTERESIS)) {
+            peak_started = true;
             reflowpeak_seconds = 0;
+            uart_puts("PEAK: reached SP, starting timer\r\n");
+        }
+        if (timer_seconds()) {
+        uart_puts("[PEAK] T=");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C  SetPoint=");
+        uart_putint(control_getTargetTemp());
+        uart_puts(" C\r\n");
+    }
+        return REFLOW_PEAK;
+    }
+
+    if(timer_seconds()){
+        if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
+            reflowpeak_seconds++;
+            uart_puts("TIM PEAK =");
+            uart_putint(reflowpeak_seconds);
+            uart_puts("s Temp =");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C\r\n");
+        }else{
+            uart_puts("HOLD: out of range, no time counted. T=");
+            uart_putint(control_getCurrentTemp());
+            uart_puts(" C  SetPoint=");
+            uart_putint(control_getTargetTemp());
+            uart_puts(" C\r\n");
+        }
+         if (reflowpeak_seconds >= TIM_PEAK_TARGET) {
+            printed = false;
             return REFLOW_COOLING;
         }
-    }
-    return REFLOW_PEAK;
+    }return REFLOW_PEAK;
 }
 
+
 ReflowState_t stateReflowCooling(void){
+    static uint16_t reflow_cooling_seconds = 0;
+    static bool printed = false;
+
+    if (!printed) {
+        uart_puts("REFLOW STATE: COOLING\r\n");
+        reflow_cooling_seconds = 0;
+        printed = true;
+    }
+
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
-    static uint16_t reflow_cooling_seconds = 0;
     control_reset();//setea las temperaturas a default
 
-    if(timer_seconds()){
+    if (timer_seconds()) {
         reflow_cooling_seconds++;
-        if(reflow_cooling_seconds>=TIM_COOLED && control_getCurrentTemp() <= TEMP_COOLED){
-            reflow_cooling_seconds = 0;
+        uart_puts("TIM COOLING t=");
+        uart_putint(reflow_cooling_seconds);
+        uart_puts("s Temp=");
+        uart_putint(control_getCurrentTemp());
+        uart_puts(" C\r\n");
+        uart_puts("   SetPoint=");
+        uart_putint(control_getTargetTemp());
+        uart_puts(" C\r\n");
+
+        if (control_getCurrentTemp() <= TEMP_COOLED && reflow_cooling_seconds >= TIM_COOLED) {
+            printed = false;
             return REFLOW_EXIT;
         }
     }
