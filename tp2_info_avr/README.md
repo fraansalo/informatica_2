@@ -27,7 +27,7 @@ El control sigue un perfil o curva de reflow compuesto por distintas fases de te
 🧪 Simulación completa en Proteus.
 ```
 
-## Etapas definidas del proceso:
+## 🔁 Etapas definidas del proceso:
 
 #### `Precalentamiento o Preheat`:
 Se encarga de volatilizar el solvente de bajo punto de fusión en la pasta, los cuales incluyen resina, potenciador de viscosidad entre otros.
@@ -45,7 +45,7 @@ Un buen proceso de enfriamiento es fundamental para el resultado final de la sol
 
 ---
 
-## Ilustraciones de referencia.
+## ⏩ Ilustraciones de referencia.
 
     Se observa el paso a paso de la temperatura entre las etapas del soldado recomendado por marcas del mercado de estaño en pasta.
 
@@ -70,11 +70,20 @@ Para establecer una idea funcional, y versatil se decidió que dentro del funcio
 6. Finaliza y vuelve a MENU_IDLE
 ```
 
-<div align="center"><b>Máquina de estados – Manual</b></div>
+<div align="center">
+  <h3>Máquina de estados – Manual</h3>
+  <p>
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">SETPOINT</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">HOLD</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">COOLING</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">EXIT</span>
+  </p>
+</div>
 
-```
-                                        SETPOINT → HOLD → COOLING → EXIT
-```
+
 
 **`2️⃣ Modo Reflow (Curva)`**: En este modo la temperatura seguirá el ciclo de la curva de reflujo o reflow para el uso específico de pastas de soldar.
 
@@ -86,24 +95,34 @@ Para establecer una idea funcional, y versatil se decidió que dentro del funcio
 3. RAMP → PEAK → Subida hasta ~220–230 °C y permanencia controlada
 4. COOLING → Enfriado moderado hasta temperatura segura
 ```
+<div align="center">
+  <h3>Máquina de estados – Reflow</h3>
+  <p>
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">PREHEAT</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">SOAK</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">RAMP</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">PEAK</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">COOLING</span>
+    →
+    <span style="padding:8px 15px; border:1px solid #555; border-radius:8px; font-weight:bold;">EXIT</span>
+  </p>
+</div>
 
-<div align="center"><b>Máquina de estados – Reflow</b></div>
-
-```
-                                    PREHEAT → SOAK → RAMP → PEAK → COOLING → EXIT
-```
-
-### Botones: 
+### 🎛️ Botones: 
 
 Nuestra máquina de estados incluye el ingreso y selección del modo por medio del usuario usando botones definidos:
 
-- **`Enter`** Ingreso a la función definida del modo correspondiente.
+- ⏎ **`Enter`** Ingreso a la función definida del modo correspondiente.
 
-- **`Select`** Selección del modo de funcionamiento. (Manual ; Reflow)
+- ⧉ **`Select`** Selección del modo de funcionamiento. (Manual ; Reflow)
 
-- **`DOWN`** Útil en el modo Manual. Disminuye el valor del setpoint en -10°C.
+- ⬆️ **`DOWN`** Útil en el modo Manual. Disminuye el valor del setpoint en -10°C.
 
-- **`UP`** Útil en el modo Manual. Aumenta el valor del setpoint en +10°C.
+- ⬇️ **`UP`** Útil en el modo Manual. Aumenta el valor del setpoint en +10°C.
 
 ---
 ## Diagramas de estado:
