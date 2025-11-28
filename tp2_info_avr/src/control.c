@@ -28,7 +28,6 @@ int16_t control_getTargetTemp(void){
     return targetTemp;
 }
 
-
 void control_setCurrentTemp(int16_t temp){
     temp_current =temp;
 }

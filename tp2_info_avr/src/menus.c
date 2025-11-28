@@ -3,6 +3,7 @@
 #include "avr_Uart.h"
 #include "config.h"
 
+
 Menu_t currentMenu = MENU_IDLE;
 ManualState_t currentManualState = MANUAL_SETPOINT;
 ReflowState_t currentReflowState = REFLOW_PREHEAT;
@@ -153,6 +154,7 @@ ManualState_t stateManualHold(void){
             reached_setpoint = true;
             hold_seconds = 0;
             uart_puts("HOLD: reached SP, starting timer\r\n");
+            control_update();
         }
         if(timer_seconds()){
             uart_puts("Temperatura =");
@@ -163,6 +165,7 @@ ManualState_t stateManualHold(void){
     }
     
     if(timer_seconds()){
+        control_update();
         if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
             hold_seconds++;
             uart_puts("TIM HOLD =");
@@ -329,6 +332,7 @@ ReflowState_t stateReflowSoak(void){
     }
 
     if(timer_seconds()){
+        control_update();
         if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
             reflowsoak_seconds++;
             uart_puts("TIM SOAK =");
@@ -409,6 +413,7 @@ ReflowState_t stateReflowPeak(void){
     }
 
     if(timer_seconds()){
+        control_update();
         if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
             reflowpeak_seconds++;
             uart_puts("TIM PEAK =");
