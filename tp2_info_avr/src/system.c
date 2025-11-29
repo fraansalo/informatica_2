@@ -24,14 +24,11 @@ void system_init(void){
 
 void system_run(void){
     if (timer_tick()) {
-        // debounce y captura de botones
         buttons_polling();
     }
-    //deshabilitado para testeo de botones y menu
-    // if (adc_ready()) {
-    //     int16_t tempC = (int16_t)adc_convertCelsius();
-    //     control_setCurrentTemp(tempC);
-    // }control_update();
-    
+    if (adc_ready()) {
+        int16_t tempC = (int16_t)adc_convertCelsius();
+        control_setCurrentTemp(tempC);
+    }
     menuTable[currentMenu]();
 }

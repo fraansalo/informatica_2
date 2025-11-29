@@ -5,7 +5,7 @@
 
 
 static int16_t targetTemp = TEMP_COOLED;
-static int16_t temp_current = TEMP_COOLED;
+static int16_t temp_current;
 static int16_t h = TEMP_HYSTERESIS;
 static bool heating = false;
 

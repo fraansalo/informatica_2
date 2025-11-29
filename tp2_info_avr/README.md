@@ -136,8 +136,22 @@ Tras retoque de detalles este sería el resultado final del diagrama de la máqu
 
 >![diagrama_maquinaestados](https://github.com/fraansalo/informatica_2/blob/b4c3982caba6b040ab1e8da4ddf514fa8bb27a62/images/diagrama_terminado.png)
 
+### Demo técnica:
+
+En este video se muestra el funcionamiento completo del proyecto y la máquina de estados, realizando pruebas entre los distintos menús. 
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=yTsBv3BDkPs" target="_blank">
+    <img src="https://img.youtube.com/vi/yTsBv3BDkPs/hqdefault.jpg" 
+         alt="The Best way to Solder? Hot Plate to the rescue!"
+         style="width:70%; border-radius:10px; border:1px solid #555;">
+  </a>
+  <br><br>
+  <b style="font-size:20px;">Demo funcionamiento Horno SMD</b>
+  <br>
+</div>
 
 ### Material Consultado:
+El material adjuntado fue utilizado como referencia para idear la propuesta del proyecto base con modificaciones. Sirvió como inspiración y guía troncal. 
 
     Canal: GreatScott!
 

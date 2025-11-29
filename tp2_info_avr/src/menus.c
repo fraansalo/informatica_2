@@ -34,12 +34,9 @@ void menuIdle(void) {
         lastMenu = MENU_COUNT;
     }
     if (btn == BTN_ENTER) {
-        int16_t temp = control_getCurrentTemp();
-        int16_t sp   = control_getTargetTemp();
-
         uart_puts("Info:\r\n");
-        uart_puts("  T_amb = "); uart_putint(temp); uart_puts(" C\r\n");
-        uart_puts("  SP     = "); uart_putint(sp);   uart_puts(" C\r\n");
+        uart_puts("  T_amb = "); uart_putint(control_getCurrentTemp()); uart_puts(" C\r\n");
+        uart_puts("  SP     = "); uart_putint(control_getTargetTemp());   uart_puts(" C\r\n");
         uart_puts("  Hyst   = "); uart_putint(TEMP_HYSTERESIS); uart_puts(" C\r\n");
         return;
         return;
@@ -58,20 +55,6 @@ void menuManual(void) {
 
     Button_t btn = buttons_get();
   
-    // if (!manualRunning){
-    //     if(btn == BTN_SELECT){
-    //     currentMenu = (currentMenu + 1) % MENU_COUNT;
-    //     lastMenu = MENU_COUNT;
-    //     return;
-    //     }
-    //     if (currentManualState == MANUAL_SETPOINT) {
-    //         ManualState_t next = stateManualSetpoint();
-    //         currentManualState = next;
-    //     } else {
-    //         currentManualState = MANUAL_SETPOINT;
-    //     }
-    //     return;
-    // }
     if (btn == BTN_SELECT) {
         currentMenu = (currentMenu + 1) % MENU_COUNT;
         lastMenu = MENU_COUNT;
@@ -88,11 +71,6 @@ void menuManual(void) {
         system_reset();
         lastMenu = MENU_COUNT;
     }else{
-        // if(estado != currentManualState){
-        //     uart_puts("MANUAL STATE -> ");
-        //     uart_putint((int16_t)estado);
-        //     uart_puts("\r\n");
-        // }
         currentManualState = estado;
     }
 }
@@ -157,7 +135,7 @@ ManualState_t stateManualHold(void){
             control_update();
         }
         if(timer_seconds()){
-            uart_puts("Temperatura =");
+            uart_puts("Temperatura = ");
             uart_putint(control_getCurrentTemp());
             uart_puts(" C\r\n");
         }
@@ -168,9 +146,9 @@ ManualState_t stateManualHold(void){
         control_update();
         if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
             hold_seconds++;
-            uart_puts("TIM HOLD =");
+            uart_puts("TIM HOLD = ");
             uart_putint(hold_seconds);
-            uart_puts("Temp =");
+            uart_puts("s Temp =");
             uart_putint(control_getCurrentTemp());
             uart_puts(" C\r\n");
         }else{
@@ -207,9 +185,9 @@ ManualState_t stateManualCooling(void){
 
     if(timer_seconds()){
         manual_cooled_seconds++;
-        uart_puts("TIM COOLING t=");
+        uart_puts("TIM COOLING = ");
         uart_putint(manual_cooled_seconds);
-        uart_puts("Temp =");
+        uart_puts("s Temp = ");
         uart_putint(control_getCurrentTemp());
         uart_puts(" C\r\n");
 
@@ -284,9 +262,9 @@ ReflowState_t stateReflowPreheat(void){
     control_update();
 
      if (timer_seconds()) {
-        uart_puts("[PREHEAT] T=");
+        uart_puts("[PREHEAT] T= ");
         uart_putint(control_getCurrentTemp());
-        uart_puts(" C  SetPoint=");
+        uart_puts(" C  SetPoint= ");
         uart_putint(control_getTargetTemp());
         uart_puts(" C\r\n");
     }
@@ -322,9 +300,9 @@ ReflowState_t stateReflowSoak(void){
             uart_puts("SOAK: reached SP, starting timer\r\n");
         }
         if (timer_seconds()) {
-        uart_puts("[SOAK] T=");
+        uart_puts("[SOAK] T= ");
         uart_putint(control_getCurrentTemp());
-        uart_puts(" C  SetPoint=");
+        uart_puts(" C  SetPoint= ");
         uart_putint(control_getTargetTemp());
         uart_puts(" C\r\n");
         }
@@ -335,15 +313,15 @@ ReflowState_t stateReflowSoak(void){
         control_update();
         if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
             reflowsoak_seconds++;
-            uart_puts("TIM SOAK =");
+            uart_puts("TIM SOAK = ");
             uart_putint(reflowsoak_seconds);
-            uart_puts("s Temp =");
+            uart_puts("s Temp = ");
             uart_putint(control_getCurrentTemp());
             uart_puts(" C\r\n");
         }else{
-            uart_puts("HOLD: out of range, no time counted. T=");
+            uart_puts("HOLD: out of range, no time counted. T= ");
             uart_putint(control_getCurrentTemp());
-            uart_puts(" C  SetPoint=");
+            uart_puts(" C  SetPoint= ");
             uart_putint(control_getTargetTemp());
             uart_puts(" C\r\n");
         }
@@ -366,9 +344,9 @@ ReflowState_t stateReflowRamp(void){
     }
     control_update();
      if (timer_seconds()) {
-        uart_puts("[RAMP] T=");
+        uart_puts("[RAMP] T= ");
         uart_putint(control_getCurrentTemp());
-        uart_puts(" C  SetPoint=");
+        uart_puts(" C  SetPoint= ");
         uart_putint(control_getTargetTemp());
         uart_puts(" C\r\n");
     }
@@ -403,9 +381,9 @@ ReflowState_t stateReflowPeak(void){
             uart_puts("PEAK: reached SP, starting timer\r\n");
         }
         if (timer_seconds()) {
-        uart_puts("[PEAK] T=");
+        uart_puts("[PEAK] T= ");
         uart_putint(control_getCurrentTemp());
-        uart_puts(" C  SetPoint=");
+        uart_puts(" C  SetPoint= ");
         uart_putint(control_getTargetTemp());
         uart_puts(" C\r\n");
     }
@@ -416,15 +394,15 @@ ReflowState_t stateReflowPeak(void){
         control_update();
         if(control_getCurrentTemp() >= (control_getTargetTemp() - TEMP_HYSTERESIS) && control_getCurrentTemp() <= (control_getTargetTemp() + TEMP_HYSTERESIS)){
             reflowpeak_seconds++;
-            uart_puts("TIM PEAK =");
+            uart_puts("TIM PEAK = ");
             uart_putint(reflowpeak_seconds);
-            uart_puts("s Temp =");
+            uart_puts("s Temp = ");
             uart_putint(control_getCurrentTemp());
             uart_puts(" C\r\n");
         }else{
-            uart_puts("HOLD: out of range, no time counted. T=");
+            uart_puts("HOLD: out of range, no time counted. T= ");
             uart_putint(control_getCurrentTemp());
-            uart_puts(" C  SetPoint=");
+            uart_puts(" C  SetPoint= ");
             uart_putint(control_getTargetTemp());
             uart_puts(" C\r\n");
         }
@@ -451,14 +429,14 @@ ReflowState_t stateReflowCooling(void){
     }
     control_reset();//setea las temperaturas a default
 
-    if (timer_seconds()) {
+    if (timer_seconds()) { 
         reflow_cooling_seconds++;
-        uart_puts("TIM COOLING t=");
+        uart_puts("TIM COOLING = ");
         uart_putint(reflow_cooling_seconds);
-        uart_puts("s Temp=");
+        uart_puts("s Temp = ");
         uart_putint(control_getCurrentTemp());
         uart_puts(" C\r\n");
-        uart_puts("   SetPoint=");
+        uart_puts("   SetPoint = ");
         uart_putint(control_getTargetTemp());
         uart_puts(" C\r\n");
 
