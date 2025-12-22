@@ -11,16 +11,11 @@ void system_init(void){
     buttons_init();
     outputs_init();
     timer_init();
-    // external_interrupt_init();
     adc_init();
     control_reset();
     uart_init(UART_BAUD_SELECT(9600, F_CPU));
 
 }
-
-//funcion para imprimir variables en UART.
-
-
 
 void system_run(void){
     if (timer_tick()) {

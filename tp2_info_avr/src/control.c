@@ -9,7 +9,6 @@ static int16_t temp_current;
 static int16_t h = TEMP_HYSTERESIS;
 static bool heating = false;
 
-//Me resetea la temperatura actual a temperatura ambiente
 void control_reset(void){
     targetTemp = TEMP_COOLED;
     h = TEMP_HYSTERESIS;
@@ -17,12 +16,9 @@ void control_reset(void){
     heater_setter(false);
 }
 
-//Setter y getter de la temperatura objetivo
 void control_setTarget(int16_t temp, int16_t hysteresis) {
     targetTemp = temp;
     h = hysteresis;
-    // heating = true; // arranca a calentar.
-    // heater_setter(heating);
 }
 int16_t control_getTargetTemp(void){
     return targetTemp;
@@ -35,7 +31,6 @@ int16_t control_getCurrentTemp(void){
     return temp_current;
 }
 
-//hace el control recurrente para verificar si se calentó lo suficiente por hysteresis
 void control_update(){
     if (temp_current <= (targetTemp - h)) {
         heating = true;  

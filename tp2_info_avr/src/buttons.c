@@ -31,7 +31,6 @@ Button_t buttons_get(void){
     return btn_temp;                //devuelve el boton que se presiono
 }
 
-//funcion para efectuar el control de los gpios de los botones.
 void buttons_polling(void){
 
     if(last_button != BTN_NONE)return;

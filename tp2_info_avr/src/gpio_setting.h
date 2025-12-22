@@ -30,12 +30,39 @@
 #define LED3_PORT       avr_GPIOB_OUT
 #define LED3_PIN        avr_GPIO_PIN_4
 
-
+/*
+ * Prototipo de funcion buttons_init - Inicializador de los puertos configurados como botones.
+ * @params: {void}
+ * @returns: {void}
+ */
 void buttons_init(void);
+
+/*
+ * Prototipo de funcion outputs_init - Inicializador de los puertos configurados como salida.
+ * @params: {void} 
+ * @returns: {void}
+ */
 void outputs_init(void);
 
+/*
+ * Prototipo de funcion buttons_polling - Función para detección de los botones presionados.
+ * @params: {void}
+ * @returns: {void}
+ */
 void buttons_polling(void);
+
+/*
+ * Prototipo de funcion heater_setter - Funcion para encender el calefactor.
+ * @params: {bool} - 
+ * @returns: {void}
+ */
 void heater_setter(bool on);
+
+/*
+ * Prototipo de funcion ledsX_setter - Conjunto de funciones para encender leds específicos.
+ * @params: {bool} - 
+ * @returns: {void}
+ */
 void leds_setter(bool on);
 void leds1_setter(bool on);
 void leds2_setter(bool on);

@@ -53,14 +53,14 @@ void timer_init(void){
 
 
 
-bool timer_tick(){  //ajuste de flags para indicar que se cumplio un ciclo.
+bool timer_tick(){  
     if(tick_flag){
         tick_flag = false;
         return true;
     }return false;
 }
 
-bool timer_seconds(void){ ////ajuste de flags para indicar que se cumplio un tiempo seteado.
+bool timer_seconds(void){ 
     if(seconds_flag){
         seconds_flag = false;
         return true;

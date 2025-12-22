@@ -4,7 +4,11 @@
 #include "avr_Extint.h"
 #include "menus.h"
  
-//inicializo INT0 y INT1
+/*
+ * Prototipo de funcion external_interrupt_init - Inicializador de interrupciones externas
+ * @params: {void}
+ * @returns: {void}
+ */
 void external_interrupt_init(void);
 
 #endif

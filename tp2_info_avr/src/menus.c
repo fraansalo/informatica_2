@@ -427,7 +427,7 @@ ReflowState_t stateReflowCooling(void){
     if(adc_ready()){
         control_setCurrentTemp((int16_t)adc_convertCelsius());
     }
-    control_reset();//setea las temperaturas a default
+    control_reset();
 
     if (timer_seconds()) { 
         reflow_cooling_seconds++;

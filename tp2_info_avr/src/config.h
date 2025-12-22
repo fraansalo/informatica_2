@@ -18,7 +18,18 @@
 #define TIM_MANUAL_HOLD 10 //50
 #define TEMP_HYSTERESIS 5
 
+/*
+ * Prototipo de funcion system_init - Función que inicializa todos los módulos de nuestro programa en el AVR.
+ * @params: {void} 
+ * @returns: {void}
+ */
 void system_init(void);
+
+/*
+ * Prototipo de funcion system_run - Función que establece el loop principal de funcionamiento.
+ * @params: {void} 
+ * @returns: {void}
+ */
 void system_run(void);
 
 
